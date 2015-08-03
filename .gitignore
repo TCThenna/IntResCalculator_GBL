@@ -1,6 +1,9 @@
 # Ignore binaries:
 bin/*
 
+# Ignore build files:
+build/*
+
 # Ignore libraries:
 lib/*
 
@@ -38,4 +41,13 @@ lib/*
 # ignore OS files
 Thumbs.db
 *.lnk
+
+#ignore directory settings
+.directory
+
+#ignore input data
+filteredhistos/*
+
+#ignore out[ut data
+pics/*
 
