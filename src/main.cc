@@ -10,8 +10,9 @@
 
 // rewrite as of 03.07.2013: Thomas Eichhorn
 
+
 #include "configure_histos.h"
-#include "AnaTel.cc"
+#include "AnaTel.h"
 #include "TF1.h"
 #include <iostream>
 #include <algorithm>
@@ -59,7 +60,6 @@
 
   TFile* _outputFile;
   
-  int thomascount = 0;
   
   TH1D *delta0 = new TH1D("temp0","dXY 0",1000, -1, 5);
   TH1D *delta1 = new TH1D("temp1","dXY 1",1000, -1, 5);
@@ -154,7 +154,6 @@ public:
   double getchi2_2D(Double_t *par, Double_t *p)
   {
    // cout << "chi2call" << endl;
-    thomascount++;
     tl->SetResolution(par[0]);
 //    tl->SetBeam(par[1], par[2]);
     tl->SetBeam(par[1], 0.0);
@@ -344,8 +343,10 @@ Double_t get_k(const Int_t pos)
 // Run minuit
 void run_global( Double_t ebeam, Double_t *obsresol_x, Double_t* obsresol_error_x, Double_t* obsresol_y, Double_t* obsresol_error_y )
 {
+  cout << "Run global" << endl;
   // Create telescope
   AnaTel *tlb = new AnaTel(telescopebuild);
+  cout << "Tscope created" << endl;
   // Give original beam energy with spread
   //tlb->SetBeam( ebeam, 0.001 );
   tlb->SetBeam( ebeam, 0.0 );
@@ -486,7 +487,7 @@ void fitter(Int_t runnumber, Double_t ebeam)
   int nominalbeam = ebeam;
   
 //  TString filename("histograms/run00");
-  TString filename("filteredhistos/run00");
+  TString filename("../filteredhistos/run00");
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -811,7 +812,6 @@ void fitter(Int_t runnumber, Double_t ebeam)
   cout << "the chi2 is " << tempchi2 << endl;
   
   
-  cout << " counts" << thomascount << endl;
   
   
   cout << " " << endl;
@@ -1275,7 +1275,7 @@ sys_prediction->Draw("L same");
 // Fitting of each file -> noise and efficiency
 void noise(Int_t runnumber)
 {
-  TString filename("filteredhistos/run00");
+  TString filename("../filteredhistos/run00");
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -1358,7 +1358,7 @@ void noise(Int_t runnumber)
 
 void getclusize(Int_t runnumber)
 {
-  TString filename("filteredhistos/run00");
+  TString filename("../filteredhistos/run00");
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -1399,7 +1399,7 @@ void getclusize(Int_t runnumber)
 
 void getpointing(Int_t runnumber, float sigm26)
 {
-  TString filename("filteredhistos/run00");
+  TString filename("../filteredhistos/run00");
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -1502,7 +1502,7 @@ cout << "asdf" << endl;
 
 void histoplot(Int_t runnumber)
 {
-  TString filename("filteredhistos/run00");
+  TString filename("../filteredhistos/run00");
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -1603,7 +1603,9 @@ int main()
 {
   
   gROOT->SetBatch();
-  gSystem->Load("libMinuit");
+  //gSystem->Load("libMinuit");
+  //gSystem->Load("lib/libGBL.so");
+  //gSystem->AddIncludePath("include/");
   
 
 _outputFile = new TFile("output.root", "RECREATE");
@@ -2608,7 +2610,7 @@ planedistance = 20;
       
       int runnumber = energyruns.at(j);
     
-      TString filename("filteredhistos/run00");
+      TString filename("../filteredhistos/run00");
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -2616,7 +2618,7 @@ planedistance = 20;
   filename+=runnumber;
   filename+="-fitter.root";
   TFile *f6 = new TFile(filename);
-  TH1D *h_m26[12];
+  //TH1D *h_m26[12];
   f6->cd();
     
     
@@ -3118,5 +3120,4 @@ planedistance = 20;
   cout << "Done :-)" << endl;
   cout << endl;
 
-  cout << thomascount << " asdfasdf" << endl;
 }
