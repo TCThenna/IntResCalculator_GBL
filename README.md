@@ -1,0 +1,1 @@
+# IntResCalculator_GBL
