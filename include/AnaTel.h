@@ -18,11 +18,11 @@
  */
 
 /*   Exchange pointing resolution estimate by GBL calculation
-     
-     Author: H. Jansen
-     email hendrik.jansen@desy.de
-     Date: 3.8.15
-*/
+
+Author: H. Jansen
+email hendrik.jansen@desy.de
+Date: 3.8.15
+ */
 
 #include "GblTrajectory.h"
 
@@ -39,57 +39,57 @@
 
 class AnaTel {
 
-public:
-  
-  //virtual ~AnaTel();
+  public:
 
-  // default constructor
-  AnaTel() = default;
+    //virtual ~AnaTel();
 
-  AnaTel(std::string GeomFile);
-  // Constructor: create telescope from geometry file
+    // default constructor
+    AnaTel() = default;
 
-  AnaTel(Int_t Npl);
-  // Constructor: create telescope "by hand"
+    AnaTel(std::string GeomFile);
+    // Constructor: create telescope from geometry file
 
-  // Dectructor
-  ~AnaTel() = default;
+    AnaTel(Int_t Npl);
+    // Constructor: create telescope "by hand"
 
-  void SetPlane(Int_t Ipl, Double_t Position,  Double_t Thickness,  
-	   Double_t X0, Double_t Resolution); 
+    // Dectructor
+    ~AnaTel() = default;
 
-  void  SetResolution(Int_t Ipl, Double_t Resolution);
+    void SetPlane(Int_t Ipl, Double_t Position,  Double_t Thickness,  
+	Double_t X0, Double_t Resolution); 
 
-  void  SetResolution(Double_t Resolution);
+    void  SetResolution(Int_t Ipl, Double_t Resolution);
 
-  void  SetResolution(Double_t * ResArray);
+    void  SetResolution(Double_t Resolution);
 
-  void  SetThickness(Double_t Thickness);
+    void  SetResolution(Double_t * ResArray);
 
-  void SetBeam(Double_t Energy, Double_t Spread=0.);
+    void  SetThickness(Double_t Thickness);
 
-  void SetDUT(Int_t idut, Bool_t UseInFit);
+    void SetBeam(Double_t Energy, Double_t Spread=0.);
 
-  Int_t GetNplanes();
+    void SetDUT(Int_t idut, Bool_t UseInFit);
 
-  Double_t * GetPosition();
+    Int_t GetNplanes();
 
-  Double_t * GetThickness();
+    Double_t * GetPosition();
 
-  Double_t * GetResolution();
+    Double_t * GetThickness();
 
-  void GetPlane(Int_t Ipl, Double_t  * Position, Double_t  * Thickness,  
-	   Double_t  * X0, Double_t  * Resolution);
+    Double_t * GetResolution();
 
-  Double_t GetError(Int_t Ipl, Bool_t UseInFit);
+    void GetPlane(Int_t Ipl, Double_t  * Position, Double_t  * Thickness,  
+	Double_t  * X0, Double_t  * Resolution);
 
-  Double_t GetWidth(Int_t Ipl, Bool_t UseInFit);
+    Double_t GetError(Int_t Ipl, Bool_t UseInFit);
 
-  Double_t GetDUTError();
+    Double_t GetWidth(Int_t Ipl, Bool_t UseInFit);
 
-  Double_t GetDUTWidth();
-  
-private:
+    Double_t GetDUTError();
+
+    Double_t GetDUTWidth();
+
+  private:
 
     int _nTelPlanes;
     double _eBeam ;
@@ -122,7 +122,7 @@ private:
     //gbl::GblPoint* point;
     std::vector<gbl::GblPoint> listOfPoints;
 
-  //ClassDef(AnaTel,1);
+    //ClassDef(AnaTel,1);
 
 };
 
