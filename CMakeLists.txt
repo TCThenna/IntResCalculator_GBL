@@ -108,9 +108,9 @@ ADD_DEFINITIONS(-DROOT_FOUND)
 
 # Check for GBL
 FIND_PACKAGE ( GBL REQUIRED )
-INCLUDE_DIRECTORIES( ${GBL_INCLUDE} )
+INCLUDE_DIRECTORIES( ${GBL_INCLUDE_DIR} )
 MESSAGE("--- GBL include dirs are ${GBL_INCLUDE_DIR}")
-MESSAGE("--- GBL libs are ${GBL_LIBRARIES}")
+MESSAGE("--- GBL libs are ${GBL_LIBRARY}")
 ADD_DEFINITIONS(-DGBL_FOUND)
 
 # include directories
@@ -128,9 +128,10 @@ SET(LIB_SOURCE_FILES
 #ADD_LIBRARY(${PROJECT_NAME} SHARED ${LIB_SOURCE_FILES} ${LCR_LIB_SOURCE_FILES})
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${LIB_SOURCE_FILES} )
 
+MESSAGE("This is the GBL_LIBRARY: ${GBL_LIBRARIES}")
 # build main GBLIntResCalculator executable
 add_executable(gbl-calc  src/main.cc )
-target_link_libraries(gbl-calc ${PROJECT_NAME} ${ROOT_LIBRARIES} ${GBL_LIB_SOURCE_FILES})
+target_link_libraries(gbl-calc ${PROJECT_NAME} ${ROOT_LIBRARIES} ${GBL_LIBRARY})
 # now set up the installation directory
 INSTALL(TARGETS ${PROJECT_NAME} gbl-calc
   RUNTIME DESTINATION bin
