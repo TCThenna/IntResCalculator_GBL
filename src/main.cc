@@ -346,13 +346,13 @@ void run_global( Double_t ebeam, Double_t *obsresol_x, Double_t* obsresol_error_
 {
   cout << "Run global" << endl;
   // Create telescope
-  AnaTel *tlb = new AnaTel(telescopebuild.c_str());
+  AnaTel *tlb = new AnaTel(telescopebuild.c_str(), ebeam);
   cout << "Tscope created" << endl;
   // Give original beam energy with spread // assume spread to be negligible
   tlb->SetBeam( ebeam, 0.0 );
   cout << " E = " << ebeam << endl;
-  cout << " Pointing reso estimation at plane 0 using given initial reso (" << *(tlb->GetResolution()) << ") = " << tlb->GetError(0,0) << endl;
-  cout << " Pointing reso estimation at plane 3 using given initial reso (" << *(tlb->GetResolution()) << ") = " << tlb->GetError(3,0) << endl;
+  cout << " Pointing reso estimation at plane 0 using given initial reso (" << *(tlb->GetResolution()) << ") = " << tlb->GetPointingRes(0,0) << endl;
+  cout << " Pointing reso estimation at plane 3 using given initial reso (" << *(tlb->GetResolution()) << ") = " << tlb->GetPointingRes(3,0) << endl;
 
   fcn_beam = new MyFunctionObject2D_beam(tlb, obsresol_x, obsresol_error_x, obsresol_y, obsresol_error_y );
   /*
@@ -1121,13 +1121,13 @@ cout << "global_plot_error / sqrt 12 " << global_plot_error << endl;
 
 // Get fiterrors on t1 for plane 2
 tl->SetResolution(resolmin2D);
-Double_t fiterror_central =  tl->GetError(2,0);
+Double_t fiterror_central =  tl->GetPointingRes(2,0);
 tl->SetResolution(resolmin2D+0.0001);
-Double_t fiterror_up = TMath::Abs(tl->GetError(2,0) - fiterror_central);
+Double_t fiterror_up = TMath::Abs(tl->GetPointingRes(2,0) - fiterror_central);
 if(verbose)
   cout << "fiterror_up " << fiterror_up  << endl;
   tl->SetResolution(resolmin2D-0.0001);
-  Double_t fiterror_down = TMath::Abs(tl->GetError(2,0) - fiterror_central);
+  Double_t fiterror_down = TMath::Abs(tl->GetPointingRes(2,0) - fiterror_central);
 if(verbose)
   cout << "fiterror_down " << fiterror_down  << endl;
   Double_t fiterror_error = 0.5*(fiterror_up + fiterror_down);
