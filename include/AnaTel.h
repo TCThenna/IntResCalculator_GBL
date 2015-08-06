@@ -46,11 +46,17 @@ class AnaTel {
     // default constructor
     AnaTel() = default;
 
-    AnaTel(std::string GeomFile);
     // Constructor: create telescope from geometry file
+    AnaTel(std::string GeomFile, double energy);
 
-    AnaTel(Int_t Npl);
+    // Constructor: create telescope from geometry file, additional integer value to turn of certain plane
+    AnaTel(std::string GeomFile, unsigned int iPlaneOff);
+
+    // Constructor: create telescope from geometry file, additional integer value to turn of certain plane
+    AnaTel(std::string GeomFile, unsigned int * PlanesOff);
+
     // Constructor: create telescope "by hand"
+    AnaTel(Int_t Npl);
 
     // Dectructor
     ~AnaTel() = default;
@@ -81,7 +87,7 @@ class AnaTel {
     void GetPlane(Int_t Ipl, Double_t  * Position, Double_t  * Thickness,  
 	Double_t  * X0, Double_t  * Resolution);
 
-    Double_t GetError(Int_t Ipl, Bool_t UseInFit);
+    Double_t GetPointingRes(Int_t Ipl, Bool_t UseInFit);
 
     Double_t GetWidth(Int_t Ipl, Bool_t UseInFit);
 
@@ -121,8 +127,23 @@ class AnaTel {
     // GBL additions
     //gbl::GblPoint* point;
     std::vector<gbl::GblPoint> listOfPoints;
+    std::vector<double> sPoint;
 
-    //ClassDef(AnaTel,1);
+    double _dz;
+    double _s; // arc
+
+    //TVectorD _wscatSi(2);
+    //TVectorD _wscatDUT(2);
+    //TVectorD _wscatAir(2);
+
+    double _X0_Si_frac;
+    double _X0_DUT_frac;
+    double _X0_Air_frac;
+
+    static constexpr double _X0_Si = 93.65; //  mm
+    static constexpr double _X0_Air = 304200; //  [mm] from PDG   
+    static constexpr double _X0_Kapton =  285.6; // mm
+
 
 };
 
