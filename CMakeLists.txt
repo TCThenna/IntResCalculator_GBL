@@ -131,7 +131,7 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED ${LIB_SOURCE_FILES} )
 MESSAGE("This is the GBL_LIBRARY: ${GBL_LIBRARIES}")
 # build main GBLIntResCalculator executable
 add_executable(gbl-calc  src/main.cc )
-target_link_libraries(gbl-calc ${PROJECT_NAME} ${ROOT_LIBRARIES} ${GBL_LIBRARY})
+target_link_libraries(gbl-calc ${PROJECT_NAME} ${ROOT_LIBRARIES} ${GBL_LIBRARIES})
 # now set up the installation directory
 INSTALL(TARGETS ${PROJECT_NAME} gbl-calc
   RUNTIME DESTINATION bin
@@ -139,6 +139,7 @@ INSTALL(TARGETS ${PROJECT_NAME} gbl-calc
   ARCHIVE DESTINATION lib)
 
 
+#SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/third_party/lib/release")
 
 #############################################
 # Doxygen target to generate HTML reference #
