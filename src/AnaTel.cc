@@ -52,7 +52,7 @@ TMatrixD Jac5( double ds )
   return jac;
 }
 
-gbl::GblPoint getPoint(double step, double s, std::vector<double> &sPoint, double res, TVectorD wscat, bool has_meas = true) {
+gbl::GblPoint AnaTel::getPoint(double step, double res, TVectorD wscat, bool has_meas) {
 
   // Propagate:
   TMatrixD jacPointToPoint = Jac5(step);
@@ -78,34 +78,31 @@ gbl::GblPoint getPoint(double step, double s, std::vector<double> &sPoint, doubl
     proL2m.UnitMatrix();
 
     point.addMeasurement(proL2m, meas, measPrec);
+
+    _ID.push_back(_sPoint.size());
   }
 
-  s += step;
-  sPoint.push_back(s);
+  //std::cout << " s was = " << _s << ", now adding step of " << step << std::endl;
+  //std::cout << " pushing s = " <<  _s + step << std::endl;
+  _s += step;
+  _sPoint.push_back(_s);
 
   return point;
 }
 
-gbl::GblPoint getPoint(double step, double s, std::vector<double> &sPoint, TVectorD wscat) {
+gbl::GblPoint AnaTel::getPoint(double step, TVectorD wscat) {
   // This does not add a measurement - no resultion is given!
-  return getPoint(step, s, sPoint, 0.0, wscat, false);
+  return AnaTel::getPoint(step, 0.0, wscat, false);
 }
 
-AnaTel::AnaTel(std::string GeomFile, double p /* energy */)
+AnaTel::AnaTel(std::string GeomFile, double _eBeam)
 {
-  // GBL
-  //listOfPoints.reserve(3*6);
-  //TVectorD wscatSi(2);
-  //    double tetSi = 0.1;
-  //    wscatSi[0] = 1.0 / ( tetSi * tetSi ); // weight
-  //    wscatSi[1] = 1.0 / ( tetSi * tetSi );
-  //point->getPoint(150, wscat);
 
   ifstream geometryFile;
 
   std::string help = "../geometries/";
   help += GeomFile;
-  std::cout << " Reading geometrye file from: " << help << std::endl;
+  std::cout << " Reading geometry file from: " << help << std::endl;
   geometryFile.open(help.c_str());
 
   //cout << "Reading telescope geometry description from " << GeomFile << endl;
@@ -192,7 +189,7 @@ AnaTel::AnaTel(std::string GeomFile, double p /* energy */)
   _tempScat3 = new double[_nTelPlanes];
 
   _fitX  = new double[_nTelPlanes];
-  _nominalError  = new double[_nTelPlanes];
+  _pointingResolution  = new double[_nTelPlanes];
 
   int arrayDim = _nTelPlanes * _nTelPlanes;
 
@@ -204,10 +201,13 @@ AnaTel::AnaTel(std::string GeomFile, double p /* energy */)
   else
     _useDUT=false;
 
-  _eBeam=0.;
+  //_eBeam=0.; // not needed anymore as constructor requires to pass the energy already
   _useBeamConstraint=false ;
 
-  listOfPoints.reserve(3*6);
+  // GBL
+
+  std::cout << "Building the GBL t'scope " << std::endl;
+  _listOfPoints.reserve(3*6);
   //double X0_Si_frac = 50.e-3 / 94 ; // Si only
 
   unsigned int ipl = 0;
@@ -219,13 +219,14 @@ AnaTel::AnaTel(std::string GeomFile, double p /* energy */)
   TVectorD wscatDUT(2);
   TVectorD wscatAir(2);
 
+  std::cout << "E = " << _eBeam << std::endl;
   while(1)
   {
     _X0_Si_frac = _planeThickness[ipl] / _X0_Si + 50.e-3 / _X0_Kapton; // Si + Kapton per plane
-    std::cout << "X0 fraction of sensors = " << _X0_Si_frac << std::endl; // FIXME add verbose level
+    if(ipl == 0) std::cout << "X0 fraction of sensors = " << _X0_Si_frac << std::endl; // FIXME add verbose level
 
-    tetSi  = 0.0136 * sqrt(_X0_Si_frac) / p * ( 1 + 0.038*log(_X0_Si_frac) );
-    //tetDUT = 0.0136 * sqrt(_X0_DUT_frac) / p * ( 1 + 0.038*log(_X0_DUT_frac) ); // FIXME for now w/o DUT
+    tetSi  = 0.0136 * sqrt(_X0_Si_frac) / _eBeam * ( 1 + 0.038*log(_X0_Si_frac) );
+    //tetDUT = 0.0136 * sqrt(_X0_DUT_frac) / _eBeam * ( 1 + 0.038*log(_X0_DUT_frac) ); // FIXME for now w/o DUT
 
     wscatSi[0] = 1.0 / ( tetSi * tetSi ); // weight
     wscatSi[1] = 1.0 / ( tetSi * tetSi );
@@ -235,25 +236,33 @@ AnaTel::AnaTel(std::string GeomFile, double p /* energy */)
 
 
 
-    listOfPoints.push_back(getPoint(step, _s, sPoint, _planeResolution[ipl], wscatSi)); // add plane
+    _listOfPoints.push_back(AnaTel::getPoint(step, _planeResolution[ipl], wscatSi)); // add plane, at first all planes have measurement enabled
     ipl++;
     if(ipl == _nTelPlanes) break;
     _dz = _planePosition[ipl] - _planePosition[ipl-1];
     _X0_Air_frac =   0.5*_dz  / _X0_Air; // Air between planes; Factor 0.5 as the air is devided into two scatterers
-    tetAir = 0.0136 * sqrt(_X0_Air_frac) / p * ( 1 + 0.038*log(_X0_Air_frac) );
+    tetAir = 0.0136 * sqrt(_X0_Air_frac) / _eBeam * ( 1 + 0.038*log(_X0_Air_frac) );
 
     wscatAir[0] = 1.0 / ( tetAir * tetAir ); // weight
     wscatAir[1] = 1.0 / ( tetAir * tetAir );
 
 
     step = 0.21*_dz;
-    listOfPoints.push_back(getPoint(step, _s, sPoint, wscatAir)); // add air, not added after last plane
+    _listOfPoints.push_back(AnaTel::getPoint(step, wscatAir)); // add air, not added after last plane
     step = 0.58*_dz;
-    listOfPoints.push_back(getPoint(step, _s, sPoint, wscatAir)); // add air, not added after last plane
+    _listOfPoints.push_back(AnaTel::getPoint(step, wscatAir)); // add air, not added after last plane
+    step = 0.21*_dz;
 
 
   }
 
+  PrintID();
+  // Print some data
+  /*for(int i = 0; i < _listOfPoints.size(); i++)
+  {
+    std::cout << "point " << i << " at " << _sPoint[i] << " has scatterer " << _listOfPoints[i].hasScatterer() << ", has measurement " << _listOfPoints[i].hasMeasurement() << std::endl;
+
+  }*/
 
 
 }
@@ -276,7 +285,7 @@ AnaTel::AnaTel(Int_t Npl)
   _tempScat3 = new double[_nTelPlanes];
 
   _fitX  = new double[_nTelPlanes];
-  _nominalError  = new double[_nTelPlanes];
+  _pointingResolution  = new double[_nTelPlanes];
 
   int arrayDim = _nTelPlanes * _nTelPlanes;
 
@@ -369,27 +378,87 @@ void  AnaTel::SetBeam(Double_t Energy, Double_t Spread)
     _beamSpread = 0.;
   }
 
-  //   if(_useBeamConstraint)
-  // std::cout <<  "Assuming beam energy of " << _eBeam 
-  //      << " GeV and beam spread of " << _beamSpread << " rad" << std::endl ;
-  // else
-  // std::cout <<  "Assuming beam energy of " << _eBeam 
-  //      << " GeV and no beam constraint" << std::endl ;
-
 }
 
-void AnaTel::SetResolution(Int_t Ipl, Double_t Resolution)
+void  AnaTel::SetBeamGBL(Double_t Energy, Double_t Spread)
 {
-  _planeResolution[Ipl]= Resolution;
+  _eBeam = Energy;
+
+  if(Spread>0.)
+  {
+    _useBeamConstraint= true ;
+    _beamSpread = Spread;
+  }
+  else
+  {
+    _useBeamConstraint= false ;
+    _beamSpread = 0.;
+  }
+
+  double tetSi, tetDUT, tetAir;
+
+  TVectorD wscatSi(2); // FIXME can these be in the header ?
+  //TVectorD wscatDUT(2);
+  TVectorD wscatAir(2);
+
+  for (int ipl = 0; ipl < _nTelPlanes; ipl++)
+  {
+    //_X0_Si_frac = _planeThickness[ipl] / _X0_Si + 50.e-3 / _X0_Kapton; // Si + Kapton per plane
+
+    tetSi  = 0.0136 * sqrt(_X0_Si_frac) / _eBeam * ( 1 + 0.038*log(_X0_Si_frac) );
+    //tetDUT = 0.0136 * sqrt(_X0_DUT_frac) / _eBeam * ( 1 + 0.038*log(_X0_DUT_frac) ); // FIXME for now w/o DUT
+
+    wscatSi[0] = 1.0 / ( tetSi * tetSi ); // weight
+    wscatSi[1] = 1.0 / ( tetSi * tetSi );
+
+    //wscatDUT[0] = 1.0 / ( tetDUT * tetDUT ); // weight // FIXME for now w/o DUT
+    //wscatDUT[1] = 1.0 / ( tetDUT * tetDUT );
+
+
+    // Add scatterer:
+    TVectorD scat(2);
+    scat.Zero(); // mean is zero
+    _listOfPoints[_ID[ipl]].addScatterer(scat, wscatSi);
+
+    _dz = _planePosition[ipl] - _planePosition[ipl-1];
+    _X0_Air_frac =   0.5*_dz  / _X0_Air; // seee constructor 
+    tetAir = 0.0136 * sqrt(_X0_Air_frac) / _eBeam * ( 1 + 0.038*log(_X0_Air_frac) );
+
+    wscatAir[0] = 1.0 / ( tetAir * tetAir ); // weight
+    wscatAir[1] = 1.0 / ( tetAir * tetAir );
+
+    if(ipl != _nTelPlanes -1){ // do not addScatterer after last plane
+      _listOfPoints[_ID[ipl]+1].addScatterer(scat, wscatAir);
+      _listOfPoints[_ID[ipl]+2].addScatterer(scat, wscatAir);
+    }
+
+
+  }
 }
 
-
-void AnaTel::SetThickness(Double_t thickness)
+void AnaTel::SetResolution(Int_t Ipl, Double_t res)
 {
-  for(int ipl=0;ipl<_nTelPlanes;ipl++)
-    _planeThickness[ipl]= thickness;
+  _planeResolution[Ipl] = res;
 }
 
+void AnaTel::SetResolutionGBL(Int_t Ipl, Double_t res)
+{
+  _planeResolution[Ipl] = res;
+
+  // measurement = residual
+  TVectorD meas(2);
+  meas.Zero(); // ideal
+
+  // Precision = 1/resolution^2
+  TVectorD measPrec(2);
+  measPrec[0] = 1.0 / res / res;
+  measPrec[1] = 1.0 / res / res;
+
+  TMatrixD proL2m(2,2);
+  proL2m.UnitMatrix();
+
+  (_listOfPoints.at(_ID[Ipl])).addMeasurement(proL2m, meas, measPrec);
+}
 
 void AnaTel::SetResolution(Double_t Resolution)
 {
@@ -397,6 +466,11 @@ void AnaTel::SetResolution(Double_t Resolution)
     _planeResolution[ipl]= Resolution;
 }
 
+void AnaTel::SetResolutionGBL(Double_t res)
+{
+  for(int ipl = 0; ipl < _nTelPlanes; ipl++)
+    SetResolutionGBL(ipl, res);
+}
 
 void AnaTel::SetResolution(Double_t * Resolution)
 {
@@ -404,6 +478,49 @@ void AnaTel::SetResolution(Double_t * Resolution)
     _planeResolution[ipl]= Resolution[ipl];
 }
 
+void AnaTel::SetResolutionGBL(Double_t * Resolution)
+{
+  for(int ipl=0; ipl<_nTelPlanes; ipl++)
+    SetResolutionGBL(ipl, Resolution[ipl]);
+}
+
+void AnaTel::SetThickness(Double_t thickness)
+{
+  for(int ipl=0;ipl<_nTelPlanes;ipl++)
+    _planeThickness[ipl]= thickness;
+}
+
+void AnaTel::SetThicknessGBL(Double_t thickness)
+{
+  for(int ipl=0;ipl<_nTelPlanes;ipl++)
+    _planeThickness[ipl]= thickness;
+
+  double tetSi;
+
+  TVectorD wscatSi(2); // FIXME can these be in the header ?
+  //TVectorD wscatDUT(2);
+  TVectorD wscatAir(2);
+
+  for (int ipl = 0; ipl < _nTelPlanes; ipl++)
+  {
+    _X0_Si_frac = _planeThickness[ipl] / _X0_Si + 50.e-3 / _X0_Kapton; // Si + Kapton per plane
+
+    tetSi  = 0.0136 * sqrt(_X0_Si_frac) / _eBeam * ( 1 + 0.038*log(_X0_Si_frac) );
+    //tetDUT = 0.0136 * sqrt(_X0_DUT_frac) / _eBeam * ( 1 + 0.038*log(_X0_DUT_frac) ); // FIXME for now w/o DUT
+
+    wscatSi[0] = 1.0 / ( tetSi * tetSi ); // weight
+    wscatSi[1] = 1.0 / ( tetSi * tetSi );
+
+    //wscatDUT[0] = 1.0 / ( tetDUT * tetDUT ); // weight // FIXME for now w/o DUT
+    //wscatDUT[1] = 1.0 / ( tetDUT * tetDUT );
+
+    // Add scatterer:
+    TVectorD scat(2);
+    scat.Zero(); // mean is zero
+    _listOfPoints[_ID[ipl]].addScatterer(scat, wscatSi);
+
+  }
+}
 
 Int_t AnaTel::GetNplanes()
 {
@@ -433,8 +550,6 @@ void AnaTel::GetPlane(Int_t Ipl, Double_t * Position,  Double_t * Thickness,
   *X0=_planeX0[Ipl];
   *Resolution=_planeResolution[Ipl];
 } 
-
-
 
 Double_t AnaTel::GetPointingRes(Int_t Ipl, Bool_t UseInFit)
 {
@@ -466,32 +581,104 @@ Double_t AnaTel::GetPointingRes(Int_t Ipl, Bool_t UseInFit)
       _planeScat[ipl]= 1./(_planeScat[ipl] * _planeScat[ipl]) ; 
 
     _fitX[ipl] = 0. ;
-    _nominalError[ipl]= _planeResolution[ipl];
+    _pointingResolution[ipl]= _planeResolution[ipl]; // first set to the intrinsic resolution, overwritten by DoAnalFit
   }
 
   // Fit with nominal parameters
 
   if(!UseInFit) {
-    _nominalError[Ipl]=0;
+    _pointingResolution[Ipl]=0;
     _fitX[Ipl] = 0. ;
   }
 
-  int status = DoAnalFit(_fitX,_nominalError);
+  int status = DoAnalFit(_fitX,_pointingResolution);
 
-  //std::cout << "After fit for plane " << Ipl << " is " << _nominalError[Ipl] << std::endl;
+  //std::cout << "After fit for plane " << Ipl << " is " << _pointingResolution[Ipl] << std::endl;
 
   if(status)
     std::cerr << "\n Fit failed !?!" << std::endl ;
 
 
-  return _nominalError[Ipl];
+  return _pointingResolution[Ipl];
 }
 
+Double_t AnaTel::GetPointingResGBL(Int_t Ipl, Bool_t UseInFit)
+{
+  // turn Ipl plane off, it is reset by calling SetResolutionGBL(double res)
+  // FIXME better just build t'scope here!
+
+  double temp_res = _planeResolution[Ipl];
+
+  if(!UseInFit){
+    // measurement = residual
+    TVectorD meas(2);
+    meas.Zero(); // ideal
+
+    // Precision = 1/resolution^2
+    TVectorD measPrec(2);
+    measPrec[0] = 0.0;
+    measPrec[1] = 0.0;
+
+    TMatrixD proL2m(2,2);
+    proL2m.UnitMatrix();
+    
+    //std::cout << " Disabling plane " << Ipl << " at point " << _ID[Ipl] << std::endl;
+
+    _listOfPoints[_ID[Ipl]].addMeasurement(proL2m, meas, measPrec);
+  }
+
+  // Print some data
+  /*for(int i = 0; i < _listOfPoints.size(); i++)
+  {
+    std::cout << "point " << i << " at " << _sPoint[i] << " has scatterer " << _listOfPoints[i].hasScatterer() << ", has measurement " << _listOfPoints[i].hasMeasurement() << std::endl;
+
+  }*/
+
+  // fit trajectory:
+
+  gbl::GblTrajectory traj( _listOfPoints, 0 );
+  //std::cout << " Is traj valid? " << traj.isValid() << std::endl;
+  //traj.printPoints();
+  //traj.printTrajectory();
+  //traj.printData();
+
+  double Chi2;
+  int Ndf;
+  double lostWeight;
+
+  traj.fit( Chi2, Ndf, lostWeight );
+
+  TVectorD aCorrection(5);
+  TMatrixDSym aCovariance(5);
+
+  for(int ipl = 0; ipl < _nTelPlanes; ipl++){
+    traj.getResults( _ID[ipl], aCorrection, aCovariance );
+    _pointingResolution[ipl] =  sqrt(aCovariance(3,3))*1E3;
+  }
+  
+  if(!UseInFit){
+    // measurement = residual
+    TVectorD meas(2);
+    meas.Zero(); // ideal
+
+    // Precision = 1/resolution^2
+    TVectorD measPrec(2);
+    measPrec[0] = 1./temp_res/temp_res;
+    measPrec[1] = 1./temp_res/temp_res;
+
+    TMatrixD proL2m(2,2);
+    proL2m.UnitMatrix();
+    
+    //std::cout << " Enabling plane " << Ipl << " at point " << _ID[Ipl] << std::endl;
+
+    _listOfPoints[_ID[Ipl]].addMeasurement(proL2m, meas, measPrec);
+  }
+
+  return _pointingResolution[Ipl];
+}
 
 Double_t AnaTel::GetWidth(Int_t Ipl, Bool_t UseInFit)
 {
-
-
 
   if(_planeResolution[Ipl] <=0.)
   {
@@ -499,8 +686,30 @@ Double_t AnaTel::GetWidth(Int_t Ipl, Bool_t UseInFit)
     return 0.;
   }
 
+  Double_t PointingRes = GetPointingRes( Ipl, UseInFit);
 
-  Double_t PointingRes =GetPointingRes( Ipl, UseInFit);
+  Double_t Width;
+
+  std::cout << " standard PR = " << PointingRes << std::endl;
+  if(UseInFit)
+    Width=sqrt(_planeResolution[Ipl]*_planeResolution[Ipl]-PointingRes*PointingRes);
+  else
+    Width=sqrt(_planeResolution[Ipl]*_planeResolution[Ipl]+PointingRes*PointingRes);
+
+  return Width;
+}
+
+Double_t AnaTel::GetWidthGBL(Int_t Ipl, Bool_t UseInFit)
+{
+
+  if(_planeResolution[Ipl] <=0.)
+  {
+    std::cerr << " Can not calculate residual width for passive plane !" << std::endl ;
+    return 0.;
+  }
+
+  Double_t PointingRes = GetPointingResGBL( Ipl, UseInFit)*0.001;
+  std::cout << "      GBL PR = " << PointingRes << std::endl;
 
   Double_t Width;
 
@@ -511,7 +720,6 @@ Double_t AnaTel::GetWidth(Int_t Ipl, Bool_t UseInFit)
 
   return Width;
 }
-
 
 Double_t AnaTel::GetDUTError()
 {

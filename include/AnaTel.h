@@ -65,14 +65,17 @@ class AnaTel {
 	Double_t X0, Double_t Resolution); 
 
     void  SetResolution(Int_t Ipl, Double_t Resolution);
-
+    void  SetResolutionGBL(Int_t Ipl, Double_t Resolution);
     void  SetResolution(Double_t Resolution);
-
+    void  SetResolutionGBL(Double_t Resolution);
     void  SetResolution(Double_t * ResArray);
+    void  SetResolutionGBL(Double_t * ResArray);
 
     void  SetThickness(Double_t Thickness);
+    void  SetThicknessGBL(Double_t Thickness);
 
     void SetBeam(Double_t Energy, Double_t Spread=0.);
+    void SetBeamGBL(Double_t Energy, Double_t Spread=0.);
 
     void SetDUT(Int_t idut, Bool_t UseInFit);
 
@@ -88,12 +91,24 @@ class AnaTel {
 	Double_t  * X0, Double_t  * Resolution);
 
     Double_t GetPointingRes(Int_t Ipl, Bool_t UseInFit);
+    Double_t GetPointingResGBL(Int_t Ipl, Bool_t UseInFit);
 
     Double_t GetWidth(Int_t Ipl, Bool_t UseInFit);
+    Double_t GetWidthGBL(Int_t Ipl, Bool_t UseInFit);
 
     Double_t GetDUTError();
 
     Double_t GetDUTWidth();
+
+    gbl::GblPoint getPoint(double step, double res, TVectorD wscat, bool has_meas = true);
+    gbl::GblPoint getPoint(double step, TVectorD wscat);
+
+    void PrintID()
+    {
+      for (int i = 0; i < _nTelPlanes; i++)
+        std::cout << _ID[i] << " ";
+      std::cout << std::endl;
+    }
 
   private:
 
@@ -108,17 +123,17 @@ class AnaTel {
     double * _planeResolution;
     bool   * _isActive;
 
-    double * _planeDist ;
-    double * _planeScat ;
-    double * _tempScat1 ;
-    double * _tempScat2 ;
-    double * _tempScat3 ;
+    double * _planeDist;
+    double * _planeScat;
+    double * _tempScat1;
+    double * _tempScat2;
+    double * _tempScat3;
 
-    double * _fitX  ;
-    double * _fitArray ;
-    double * _nominalError ;
+    double * _fitX;
+    double * _fitArray;
+    double * _pointingResolution;
 
-    bool   _useBeamConstraint ;
+    bool   _useBeamConstraint;
     double _beamSpread;
 
     int DoAnalFit(double * , double *);
@@ -126,8 +141,8 @@ class AnaTel {
 
     // GBL additions
     //gbl::GblPoint* point;
-    std::vector<gbl::GblPoint> listOfPoints;
-    std::vector<double> sPoint;
+    std::vector<gbl::GblPoint> _listOfPoints;
+    std::vector<double> _sPoint;
 
     double _dz;
     double _s; // arc
@@ -143,6 +158,8 @@ class AnaTel {
     static constexpr double _X0_Si = 93.65; //  mm
     static constexpr double _X0_Air = 304200; //  [mm] from PDG   
     static constexpr double _X0_Kapton =  285.6; // mm
+
+    std::vector<int> _ID; // contains the position of the M26 planes in listOfPoints
 
 
 };
