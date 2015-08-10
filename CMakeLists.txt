@@ -139,7 +139,6 @@ INSTALL(TARGETS ${PROJECT_NAME} gbl-calc
   ARCHIVE DESTINATION lib)
 
 
-#SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/third_party/lib/release")
 
 #############################################
 # Doxygen target to generate HTML reference #
