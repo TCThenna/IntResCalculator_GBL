@@ -58,6 +58,9 @@
 #include "TStopwatch.h"
 #include "TLatex.h"
 
+std::string inputDir20;
+std::string inputDir150;
+std::string inputFile;
 TFile* _outputFile;
 
 
@@ -157,19 +160,20 @@ class  MyFunctionObject2D_beam {
       // cout << "chi2call" << endl;
       std::cout << " Current intrinsic resolution: " << par[0] << std::endl;
       tl->SetResolution(par[0]);
-      tl->SetResolutionGBL(0,par[0]);
+      tl->SetResolutionGBL(par[0]);
       //tl->SetBeam(par[1], par[2]);
-      //tl->SetBeam(par[1], 0.0);
+      tl->SetBeam(par[1], 0.0);
       //tl->SetThickness(par[3]);
       Double_t chi2 =0.0;
       Double_t chi2GBL =0.0;
       for(Int_t j = 0; j < nplanes; j++)
 	//for(Int_t j = 1; j < nplanes-1; j++) // hj
       {
-	float w    = tl->GetWidth(j,0)*1000.0;
-	float wGBL = tl->GetWidthGBL(j,0)*1000.0;
-	std::cout << " w for plane " << j << " is " << w << std::endl;
-	std::cout << " wGBL for plane " << j << " is " << wGBL << std::endl;
+	float w    = tl->GetWidth(j,0);
+	float wGBL = tl->GetWidthGBL(j,0);
+	std::cout << " w for plane " << j << " is " << w << ",    wGBL for plane " << j << " is " << wGBL << std::endl;
+	std::cout << " w measured for plane " << j << " is " << measured1[j] << " +- " << error1[j] << std::endl;
+	
 	chi2    += pow( (w    - measured1[j])/(error1[j]) ,2) + pow( (w    - measured2[j])/(error2[j]) ,2) ; 
 	chi2GBL += pow( (wGBL - measured1[j])/(error1[j]) ,2) + pow( (wGBL - measured2[j])/(error2[j]) ,2) ; 
 	//if(j == 0) cout << "sigma_hat 0 = " <<  w ;
@@ -361,6 +365,8 @@ void run_global( Double_t ebeam, Double_t *obsresol_x, Double_t* obsresol_error_
   cout << " E = " << ebeam << endl;
   cout << " Pointing reso estimation at plane 0 using given initial reso (" << *(tlb->GetResolution()) << ") = " << tlb->GetPointingRes(0,0) << endl;
   cout << " Pointing reso estimation at plane 3 using given initial reso (" << *(tlb->GetResolution()) << ") = " << tlb->GetPointingRes(3,0) << endl;
+  cout << " GBL Pointing reso estimation at plane 0 using given initial reso (" << *(tlb->GetResolution()) << ") = " << tlb->GetPointingResGBL(0,0) << endl;
+  cout << " GBL Pointing reso estimation at plane 3 using given initial reso (" << *(tlb->GetResolution()) << ") = " << tlb->GetPointingResGBL(3,0) << endl;
 
   fcn_beam = new MyFunctionObject2D_beam(tlb, obsresol_x, obsresol_error_x, obsresol_y, obsresol_error_y );
   /*
@@ -384,7 +390,7 @@ void run_global( Double_t ebeam, Double_t *obsresol_x, Double_t* obsresol_error_
   TMinuit *gMinuit = new TMinuit(4);
 
   // set print level (-1 = quiet, 0 = normal, 1 = verbose)
-  gMinuit->SetPrintLevel(-1);
+  gMinuit->SetPrintLevel(1);
 
   // give the function
   gMinuit->SetFCN(fcn_wrapper);
@@ -495,7 +501,11 @@ void fitter(Int_t runnumber, Double_t ebeam)
   int nominalbeam = ebeam;
 
   //  TString filename("histograms/run00");
-  TString filename("../filteredhistos/run00");
+  std::string help;
+  if(runnumber < 113 || runnumber > 700) help = inputDir150 + inputFile;
+  else help = inputDir20 + inputFile;
+  std::cout << "Reading file: " << help << std::endl;
+  TString filename(help.c_str());
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -671,8 +681,8 @@ void fitter(Int_t runnumber, Double_t ebeam)
     if (verbose0)
       cout << " Measured residual mean plane " << j << " is " << (mean_2 *1000.0) << " mu m" << endl;
 
-    Double_t sigma_2 = f2->GetParameter(2) * 1000.0;
-    cout << " measured width in um = " << sigma_2 << endl;
+    Double_t sigma_2 = f2->GetParameter(2);
+    cout << " measured width in um = " << sigma_2*1.e3 << endl;
     //Double_t sigma_error_2 = f2->GetParError(2) * 1000.0;
     Double_t sigma_error_2 = 0.05 * sigma_2;
 
@@ -1283,7 +1293,10 @@ if (planedistance == 150)
 // Fitting of each file -> noise and efficiency
 void noise(Int_t runnumber)
 {
-  TString filename("../filteredhistos/run00");
+  std::string help;
+  if(runnumber < 113 || runnumber > 700) help = inputDir150 + inputFile;
+  else help = inputDir20 + inputFile;
+  TString filename(help.c_str());
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -1366,7 +1379,10 @@ void noise(Int_t runnumber)
 
 void getclusize(Int_t runnumber)
 {
-  TString filename("../filteredhistos/run00");
+  std::string help;
+  if(runnumber < 113 || runnumber > 700) help = inputDir150 + inputFile;
+  else help = inputDir20 + inputFile;
+  TString filename(help.c_str());
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -1407,7 +1423,10 @@ void getclusize(Int_t runnumber)
 
 void getpointing(Int_t runnumber, float sigm26)
 {
-  TString filename("../filteredhistos/run00");
+  std::string help;
+  if(runnumber < 113 || runnumber > 700) help = inputDir150 + inputFile;
+  else help = inputDir20 + inputFile;
+  TString filename(help.c_str());
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -1510,7 +1529,10 @@ void getpointing(Int_t runnumber, float sigm26)
 
 void histoplot(Int_t runnumber)
 {
-  TString filename("../filteredhistos/run00");
+  std::string help;
+  if(runnumber < 113 || runnumber > 700) help = inputDir150 + inputFile;
+  else help = inputDir20 + inputFile;
+  TString filename(help.c_str());
   if (runnumber <= 999)
     filename+="0";
   if (runnumber <= 99)
@@ -1615,6 +1637,9 @@ int main()
   //gSystem->Load("lib/libGBL.so");
   //gSystem->AddIncludePath("include/");
 
+  inputDir20  = "../../analysis-20mm/output/histograms/";
+  inputDir150  = "../../analysis-150mm/output/histograms/";
+  inputFile = "run00";
 
   _outputFile = new TFile("output.root", "RECREATE");
   _outputFile->cd();
@@ -1807,14 +1832,14 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = planedistance*j;
 
-      fitter(63,6.);
-      fitter(73,5.);
-      fitter(84,4.);
-      fitter(96,3.);
-      fitter(106,2.);
+      //fitter(63,6.);
+      //fitter(73,5.);
+      //fitter(84,4.);
+      //fitter(96,3.);
+      //fitter(106,2.);
       
       // CERN
-      fitter(755,120.);
+      //fitter(755,120.);
 
 
 
@@ -1824,10 +1849,10 @@ int main()
       posx[j] = planedistance*j;
 
       fitter(117,6.);
-      fitter(127,5.);
-      fitter(137,4.);
-      fitter(153,3.);
-      fitter(165,2.);
+      //fitter(127,5.);
+      //fitter(137,4.);
+      //fitter(153,3.);
+      //fitter(165,2.);
 
 
   }
@@ -2648,7 +2673,10 @@ int main()
 
       int runnumber = energyruns.at(j);
 
-      TString filename("../filteredhistos/run00");
+      std::string help;
+      if(runnumber < 113 || runnumber > 700) help = inputDir150 + inputFile;
+      else help = inputDir20 + inputFile;
+      TString filename(help.c_str());
       if (runnumber <= 999)
 	filename+="0";
       if (runnumber <= 99)

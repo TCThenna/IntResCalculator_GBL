@@ -653,7 +653,7 @@ Double_t AnaTel::GetPointingResGBL(Int_t Ipl, Bool_t UseInFit)
 
   for(int ipl = 0; ipl < _nTelPlanes; ipl++){
     traj.getResults( _ID[ipl], aCorrection, aCovariance );
-    _pointingResolution[ipl] =  sqrt(aCovariance(3,3))*1E3;
+    _pointingResolution[ipl] =  sqrt(aCovariance(3,3));
   }
   
   if(!UseInFit){
@@ -690,7 +690,7 @@ Double_t AnaTel::GetWidth(Int_t Ipl, Bool_t UseInFit)
 
   Double_t Width;
 
-  std::cout << " standard PR = " << PointingRes << std::endl;
+  //std::cout << " standard PR for plane " << Ipl << " = " << PointingRes << std::endl;
   if(UseInFit)
     Width=sqrt(_planeResolution[Ipl]*_planeResolution[Ipl]-PointingRes*PointingRes);
   else
@@ -708,8 +708,8 @@ Double_t AnaTel::GetWidthGBL(Int_t Ipl, Bool_t UseInFit)
     return 0.;
   }
 
-  Double_t PointingRes = GetPointingResGBL( Ipl, UseInFit)*0.001;
-  std::cout << "      GBL PR = " << PointingRes << std::endl;
+  Double_t PointingRes = GetPointingResGBL( Ipl, UseInFit);
+  //std::cout << "      GBL PR for plane " << Ipl << " = " << PointingRes << std::endl;
 
   Double_t Width;
 
