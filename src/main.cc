@@ -155,22 +155,30 @@ class  MyFunctionObject2D_beam {
     double getchi2_2D(Double_t *par, Double_t *p)
     {
       // cout << "chi2call" << endl;
+      std::cout << " Current intrinsic resolution: " << par[0] << std::endl;
       tl->SetResolution(par[0]);
-      //    tl->SetBeam(par[1], par[2]);
-      tl->SetBeam(par[1], 0.0);
-      tl->SetThickness(par[3]);
+      tl->SetResolutionGBL(0,par[0]);
+      //tl->SetBeam(par[1], par[2]);
+      //tl->SetBeam(par[1], 0.0);
+      //tl->SetThickness(par[3]);
       Double_t chi2 =0.0;
+      Double_t chi2GBL =0.0;
       for(Int_t j = 0; j < nplanes; j++)
 	//for(Int_t j = 1; j < nplanes-1; j++) // hj
       {
-	float w = tl->GetWidth(j,0)*1000.0;
-	chi2 += pow( (w - measured1[j])/(error1[j]) ,2) + pow( (w - measured2[j])/(error2[j]) ,2) ; 
+	float w    = tl->GetWidth(j,0)*1000.0;
+	float wGBL = tl->GetWidthGBL(j,0)*1000.0;
+	std::cout << " w for plane " << j << " is " << w << std::endl;
+	std::cout << " wGBL for plane " << j << " is " << wGBL << std::endl;
+	chi2    += pow( (w    - measured1[j])/(error1[j]) ,2) + pow( (w    - measured2[j])/(error2[j]) ,2) ; 
+	chi2GBL += pow( (wGBL - measured1[j])/(error1[j]) ,2) + pow( (wGBL - measured2[j])/(error2[j]) ,2) ; 
 	//if(j == 0) cout << "sigma_hat 0 = " <<  w ;
 	//if(j == 3) cout << "  sigma_hat 3 = " <<  w ;
-	if(j == nplanes -1) cout << " -> chi2/11 = " << chi2/11. << endl;
+	//if(j == nplanes -1) cout << " -> chi2/11 = " << chi2/11. << endl;
 
       }
-      return chi2;
+      //return chi2;
+      return chi2GBL;
 
     }
     double getchi2_1D(Double_t *par, Double_t *p)
@@ -376,7 +384,7 @@ void run_global( Double_t ebeam, Double_t *obsresol_x, Double_t* obsresol_error_
   TMinuit *gMinuit = new TMinuit(4);
 
   // set print level (-1 = quiet, 0 = normal, 1 = verbose)
-  gMinuit->SetPrintLevel(1);
+  gMinuit->SetPrintLevel(-1);
 
   // give the function
   gMinuit->SetFCN(fcn_wrapper);
@@ -1758,7 +1766,7 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = planedistance*j;
 
-    fitter(98,5.4);
+    //fitter(98,5.4);
     fitter(37,6.);
     //fitter(5063,3.6);
     //fitter(5043,2.4);
@@ -1802,8 +1810,8 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = planedistance*j;
 
-    fitter(236,2.4);
-    fitter(262,6.0);
+    //fitter(236,2.4);
+    //fitter(262,6.0);
 
 
     /*   fitter(296,12.5);
