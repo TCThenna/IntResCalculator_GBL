@@ -1628,16 +1628,19 @@ int main()
 
 
   // Initialises the run vectors
-  std::vector<int> run2;
-  std::vector<int> run3;
-  std::vector<int> run4;
-  std::vector<int> run5;
-  std::vector<int> run2th;
-  std::vector<int> run3th;
-  std::vector<int> run5th;
-  std::vector<int> run120;
+    std::vector<int> run_6_150;
+    std::vector<int> run_5_150;
+    std::vector<int> run_4_150;
+    std::vector<int> run_3_150;
+    std::vector<int> run_2_150;
+    std::vector<int> run_6_20;
+    std::vector<int> run_5_20;
+    std::vector<int> run_4_20;
+    std::vector<int> run_3_20;
+    std::vector<int> run_2_20;
+    std::vector<int> run120;
 
-  std::vector<int> testing;
+  /*std::vector<int> testing;
 
   testing.push_back(291);
   testing.push_back(294);
@@ -1647,95 +1650,133 @@ int main()
   testing.push_back(298);
   testing.push_back(299);
   testing.push_back(300);
+  */
 
   // Fills the run vectors with runnumbers
   if(true)
   {
-    // energy 2 GeV:
-    //run2.push_back(5037);	// thr 3
-    run2.push_back(5041);	// thr 3
-    run2.push_back(5040);	// thr 4
-    run2.push_back(5041);	// thr 5
-    run2.push_back(5043);	// thr 6
-    run2.push_back(5045);	// thr 7
-    run2.push_back(5049);	// thr 8
-    run2.push_back(5051);	// thr 9
-    run2.push_back(5052);	// thr 10
-    run2.push_back(5054);	// thr 11
-    run2.push_back(5056);	// thr 12
+      // 150 mm
+      // energy 6 GeV:
+      run_6_150.push_back(60);	// thr 3
+      run_6_150.push_back(61);	// thr 4
+      run_6_150.push_back(62);	// thr 5
+      run_6_150.push_back(63);	// thr 6
+      run_6_150.push_back(64);	// thr 7
+      run_6_150.push_back(65);	// thr 8
+      run_6_150.push_back(66);	// thr 9
+      run_6_150.push_back(67);	// thr 10
+      run_6_150.push_back(68);	// thr 11
+      run_6_150.push_back(69);	// thr 12
 
-    // energy 3 GeV:
-    //run3.push_back(5066);	// thr 3
-    run3.push_back(5065);	// thr 4
-    run3.push_back(5065);	// thr 4
-    run3.push_back(5064);	// thr 5
-    run3.push_back(5063);	// thr 6
-    run3.push_back(5062);	// thr 7
-    run3.push_back(5061);	// thr 8
-    run3.push_back(5060);	// thr 9
-    run3.push_back(5059);	// thr 10
-    run3.push_back(5058);	// thr 11
-    run3.push_back(5057);	// thr 12
+      // energy 5 GeV:
+      run_5_150.push_back(70);	// thr 3
+      run_5_150.push_back(71);	// thr 4
+      run_5_150.push_back(72);	// thr 5
+      run_5_150.push_back(73);	// thr 6
+      run_5_150.push_back(74);	// thr 7
+      run_5_150.push_back(75);	// thr 8
+      run_5_150.push_back(76);	// thr 9
+      run_5_150.push_back(77);	// thr 10
+      run_5_150.push_back(78);	// thr 11
+      run_5_150.push_back(79);	// thr 12
 
-    // energy 4.4 GeV:
-    run4.push_back(103);	// thr 3
-    run4.push_back(101);	// thr 4
-    run4.push_back(99);		// thr 5
-    run4.push_back(98);		// thr 6
-    run4.push_back(97);		// thr 7
-    run4.push_back(96);		// thr 8
-    run4.push_back(94);		// thr 9
-    run4.push_back(92);		// thr 10
-    run4.push_back(90);		// thr 11
-    run4.push_back(88);		// thr 12
+      // energy 4 GeV:
+      run_4_150.push_back(81);	// thr 3
+      run_4_150.push_back(82);	// thr 4
+      run_4_150.push_back(83);	// thr 5
+      run_4_150.push_back(84);	// thr 6
+      run_4_150.push_back(85);	// thr 7
+      run_4_150.push_back(86);	// thr 8
+      run_4_150.push_back(89);	// thr 9
+      run_4_150.push_back(90);	// thr 10
+      run_4_150.push_back(91);	// thr 11
+      run_4_150.push_back(92);	// thr 12
 
-    // energy 5 GeV:
-    run5.push_back(85);		// thr 3
-    run5.push_back(83);		// thr 4
-    run5.push_back(78);		// thr 5
-    run5.push_back(37);		// thr 6
-    run5.push_back(76);		// thr 7
-    run5.push_back(75);		// thr 8
-    run5.push_back(72);		// thr 9
-    run5.push_back(71);		// thr 10
-    run5.push_back(68);		// thr 11
-    run5.push_back(64);		// thr 12
+      // energy 3 GeV:
+      run_3_150.push_back(93);	// thr 3
+      run_3_150.push_back(94);	// thr 4
+      run_3_150.push_back(95);	// thr 5
+      run_3_150.push_back(96);	// thr 6
+      run_3_150.push_back(97);	// thr 7
+      run_3_150.push_back(98);	// thr 8
+      run_3_150.push_back(99);	// thr 9
+      run_3_150.push_back(100);	// thr 10
+      run_3_150.push_back(101);	// thr 11
+      run_3_150.push_back(102);	// thr 12
 
-    // energy 2 GeV, 20mm Data:
-    run2th.push_back(233);	// thr 3
-    run2th.push_back(234);	// thr 4
-    run2th.push_back(235);	// thr 5
-    run2th.push_back(236);	// thr 6
-    run2th.push_back(237);	// thr 7
-    run2th.push_back(238);	// thr 8
-    run2th.push_back(239);	// thr 9
-    run2th.push_back(240);	// thr 10
-    run2th.push_back(241);	// thr 11
-    run2th.push_back(245);	// thr 12
+      // energy 2 GeV:
+      run_2_150.push_back(103);	// thr 3
+      run_2_150.push_back(104);	// thr 4
+      run_2_150.push_back(105);	// thr 5
+      run_2_150.push_back(106);	// thr 6
+      run_2_150.push_back(107);	// thr 7
+      run_2_150.push_back(108);	// thr 8
+      run_2_150.push_back(109);	// thr 9
+      run_2_150.push_back(110);	// thr 10
+      run_2_150.push_back(111);	// thr 11
+      run_2_150.push_back(112);	// thr 12
 
-    // energy 3 GeV, 20mm Data:
-    run3th.push_back(246);	// thr 3
-    run3th.push_back(247);	// thr 4
-    run3th.push_back(248);	// thr 5
-    run3th.push_back(249);	// thr 6
-    run3th.push_back(250);	// thr 7
-    run3th.push_back(251);	// thr 8
-    run3th.push_back(252);	// thr 9
-    run3th.push_back(253);	// thr 10
-    run3th.push_back(254);	// thr 11
-    run3th.push_back(255);	// thr 12
+      // 20 mm
+      // energy 6 GeV:
+      run_6_20.push_back(114);	// thr 3
+      run_6_20.push_back(115);	// thr 4
+      run_6_20.push_back(116);	// thr 5
+      run_6_20.push_back(117);	// thr 6
+      run_6_20.push_back(118);	// thr 7
+      run_6_20.push_back(119);	// thr 8
+      run_6_20.push_back(120);	// thr 9
+      run_6_20.push_back(121);	// thr 10
+      run_6_20.push_back(122);	// thr 11
+      run_6_20.push_back(123);	// thr 12
 
-    // energy 5 GeV, 20mm Data:
-    run5th.push_back(258);	// thr 3
-    run5th.push_back(259);	// thr 4
-    run5th.push_back(261);	// thr 5
-    run5th.push_back(262);	// thr 6
-    run5th.push_back(263);	// thr 7
-    run5th.push_back(264);	// thr 8
-    run5th.push_back(265);	// thr 9
-    run5th.push_back(266);	// thr 10
-    run5th.push_back(267);	// thr 11
-    run5th.push_back(268);	// thr 12
+      // energy 5 GeV:
+      run_5_20.push_back(124);	// thr 3
+      run_5_20.push_back(125);	// thr 4
+      run_5_20.push_back(126);	// thr 5
+      run_5_20.push_back(127);	// thr 6
+      run_5_20.push_back(128);	// thr 7
+      run_5_20.push_back(129);	// thr 8
+      run_5_20.push_back(130);	// thr 9
+      run_5_20.push_back(131);	// thr 10
+      run_5_20.push_back(132);	// thr 11
+      run_5_20.push_back(133);	// thr 12
+
+      // energy 4 GeV:
+      run_4_20.push_back(134);	// thr 3
+      run_4_20.push_back(135);	// thr 4
+      run_4_20.push_back(136);	// thr 5
+      run_4_20.push_back(137);	// thr 6
+      run_4_20.push_back(140);	// thr 7
+      run_4_20.push_back(141);	// thr 8
+      run_4_20.push_back(142);	// thr 9
+      run_4_20.push_back(143);	// thr 10
+      run_4_20.push_back(144);	// thr 11
+      run_4_20.push_back(145);	// thr 12
+
+      // energy 3 GeV:
+      run_3_20.push_back(146);	// thr 3
+      run_3_20.push_back(147);	// thr 4
+      run_3_20.push_back(148);	// thr 5
+      run_3_20.push_back(153);	// thr 6
+      run_3_20.push_back(154);	// thr 7
+      run_3_20.push_back(155);	// thr 8
+      run_3_20.push_back(156);	// thr 9
+      run_3_20.push_back(157);	// thr 10
+      run_3_20.push_back(158);	// thr 11
+      run_3_20.push_back(161);	// thr 12
+
+      // energy 2 GeV:
+      run_2_20.push_back(162);	// thr 3
+      run_2_20.push_back(163);	// thr 4
+      run_2_20.push_back(164);	// thr 5
+      run_2_20.push_back(165);	// thr 6
+      run_2_20.push_back(166);	// thr 7
+      run_2_20.push_back(167);	// thr 8
+      run_2_20.push_back(168);	// thr 9
+      run_2_20.push_back(169);	// thr 10
+      run_2_20.push_back(170);	// thr 11
+      run_2_20.push_back(171);	// thr 12
+
 
     // energy 120 GeV CERN, 150mm Data:
     run120.push_back(752);	// thr 3
@@ -1766,76 +1807,29 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = planedistance*j;
 
-    //fitter(98,5.4);
-    fitter(37,6.);
-    //fitter(5063,3.6);
-    //fitter(5043,2.4);
+      fitter(63,6.);
+      fitter(73,5.);
+      fitter(84,4.);
+      fitter(96,3.);
+      fitter(106,2.);
+      
+      // CERN
+      fitter(755,120.);
 
-    /*
-       fitter(37,5.0);
-       fitter(37,5.1);
-       fitter(37,5.2);
-       fitter(37,5.3);
-       fitter(37,5.4);
-       fitter(37,5.5);
-       fitter(37,5.6);
-       fitter(37,5.7);
-       fitter(37,5.8);
-       fitter(37,5.9);
-       fitter(37,6.0);
-     */
-    /*    
-	  fitter(5063,3.3);
-	  fitter(5063,3.4);
-	  fitter(5063,3.5);
-	  fitter(5063,3.6);
-	  fitter(5063,3.7);
-	  fitter(5063,3.8);
-	  fitter(5063,3.9);
-	  fitter(5063,4.0);
-	  fitter(5063,4.1);
-	  fitter(5063,4.2);
-	  fitter(5063,4.3);
-     */
-    /*
-       fitter(37,6.1);
-       fitter(37,6.2);
-       fitter(98,5.5);
-       fitter(98,5.6);
 
-     */
 
     telescopebuild = "AnaTel_thin.geom";
     planedistance = 20;
     for(int j=0;j<nplanes;j++)
       posx[j] = planedistance*j;
 
-    //fitter(236,2.4);
-    //fitter(262,6.0);
+      fitter(117,6.);
+      fitter(127,5.);
+      fitter(137,4.);
+      fitter(153,3.);
+      fitter(165,2.);
 
 
-    /*   fitter(296,12.5);
-	 fitter(297,12.5);
-	 fitter(298,12.5);
-	 fitter(299,12.5);
-	 fitter(300,12.5);*/
-    /*
-       fitter(testing[1],12.5);
-       fitter(testing[2],12.5);
-       fitter(testing[3],12.5);
-       fitter(testing[4],12.5);
-       fitter(testing[5],12.5);
-       fitter(testing[6],12.5);
-       fitter(testing[7],12.5);*/
-    /*
-       telescopebuild = "AnaTel_thin.geom";
-       planedistance = 20;
-       for(int j=0;j<nplanes;j++)
-       posx[j] = planedistance*j;
-
-
-       fitter(testing[1],5.0);
-     */
   }
 
 
@@ -1853,37 +1847,31 @@ int main()
     cout << "Wide Geometry" << endl;
     cout << " " << endl;
 
-    telescopebuild = "AnaTel.geom";
-    planedistance = 150;
-    for(int j=0;j<nplanes;j++)
-      posx[j] = 150.0*j;
-
-    for(int i=0;i<run2.size();i++)
-    {
-      global_thresh = i+3;
-      fitter( run2[i], 2.0 );
-    }
-    for(int i=0;i<run3.size();i++)
-    {
-      global_thresh = i+3;
-      fitter( run3[i], 3.0 );
-    }
-    for(int i=0;i<run4.size();i++)
-    {
-      global_thresh = i+3;
-      fitter( run4[i], 4.4 );
-    }
-    for(int i=0;i<run5.size();i++)
-    {
-      global_thresh = i+3;
-      fitter( run5[i], 5.0 );
-    }
-
-    for(int i=0;i<run120.size();i++)
-    {
-      global_thresh = i+3;
-      fitter( run120[i], 120.0 );
-    }
+      for(int i=0;i<run_6_150.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_6_150[i], 6.0 );
+      }
+      for(int i=0;i<run_5_150.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_5_150[i], 5.0 );
+      }
+      for(int i=0;i<run_4_150.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_4_150[i], 4.0 );
+      }
+      for(int i=0;i<run_3_150.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_3_150[i], 3.0 );
+      }
+      for(int i=0;i<run_2_150.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_2_150[i], 2.0 );
+      }
 
     cout << " " << endl;
     cout << "Thin Geometry" << endl;
@@ -1894,21 +1882,31 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = 20.0*j;
 
-    for(int i=0;i<run2th.size();i++)
-    {
-      global_thresh = i+3;
-      fitter( run2th[i], 2.0 );
-    }
-    for(int i=0;i<run3th.size();i++)
-    {
-      global_thresh = i+3;
-      fitter( run3th[i], 3.0 );
-    }
-    for(int i=0;i<run5th.size();i++)
-    {
-      global_thresh = i+3;
-      fitter( run5th[i], 5.0 );
-    }
+      for(int i=0;i<run_6_20.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_6_20[i], 6.0 );
+      }
+      for(int i=0;i<run_5_20.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_5_20[i], 5.0 );
+      }
+      for(int i=0;i<run_4_20.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_4_20[i], 4.0 );
+      }
+      for(int i=0;i<run_3_20.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_3_20[i], 3.0 );
+      }
+      for(int i=0;i<run_2_20.size();i++)
+      {
+	global_thresh = i+3;
+	fitter( run_2_20[i], 2.0 );
+      }
   }
 
   // Run according to clustersize, this should be at one threshold -> to be done -> Geometry needs implementing
@@ -1928,16 +1926,16 @@ int main()
       submask = convert.str();
 
       // this needs to be done:
-      for(int i=0;i<run3.size();i++)
-	fitter( run3[i], 3 );
+      for(int i=0;i<run_3_150.size();i++)
+	fitter( run_3_150[i], 3 );
       clusterresult[j] = m26_resolution*1000.0;
       clustererror[j] = m26_res_error*1000.0;
     }
 
     // As a comparison: put "clustersize = 0" as the normal uncut run.
     submask = "";
-    for(int i=0;i<run3.size();i++)
-      fitter( run3[i], 3 );
+    for(int i=0;i<run_3_150.size();i++)
+      fitter( run_3_150[i], 3 );
     clusterresult[0] = m26_resolution*1000.0;
     clustererror[0] = m26_res_error*1000.0;
 
@@ -1964,182 +1962,215 @@ int main()
   }
 
   // Run over thresholds
-  if(runmode == 2)
-  {
-    cout << "Threshold mode" << endl;
-    const Int_t threshcount = 12;
-    Double_t threshresult2[threshcount];
-    Double_t threshresult3[threshcount];
-    Double_t threshresult4[threshcount];
-    Double_t threshresult5[threshcount];
-    Double_t threshresult120[threshcount];
-    Double_t thresherror2[threshcount];
-    Double_t thresherror3[threshcount];
-    Double_t thresherror4[threshcount];
-    Double_t thresherror5[threshcount];
-    Double_t thresherror120[threshcount];
-
-    Double_t threshresult2th[threshcount];
-    Double_t threshresult3th[threshcount];
-    Double_t threshresult5th[threshcount];
-    Double_t thresherror2th[threshcount];
-    Double_t thresherror3th[threshcount];
-    Double_t thresherror5th[threshcount];
-
-    Double_t x[threshcount];
-    Double_t xerrorthresh[threshcount];
-    for (Int_t j=0;j<(threshcount-2);j++)
+    if(runmode == 2)
     {
-
-      telescopebuild = "AnaTel.geom";
-      planedistance = 150;
-      for(int jj=0;jj<nplanes;jj++)
-	posx[jj] = planedistance*jj;
-
-
-      x[j] = j+3;
-      global_thresh = x[j];
-      xerrorthresh[j] = 0.0;
-      submask = "";
-
-
-      fitter( run2[j], 2.2 ); 
-      threshresult2[j] = m26_resolution*1000.0;
-      thresherror2[j] = global_plot_error;
+      cout << "Threshold mode" << endl;
+      const Int_t threshcount = 12;
+      Double_t threshresult_2_150[threshcount];
+      Double_t threshresult_3_150[threshcount];
+      Double_t threshresult_4_150[threshcount];
+      Double_t threshresult_5_150[threshcount];
+      Double_t threshresult_6_150[threshcount];
+      Double_t threshresult_2_20[threshcount];
+      Double_t threshresult_3_20[threshcount];
+      Double_t threshresult_4_20[threshcount];
+      Double_t threshresult_5_20[threshcount];
+      Double_t threshresult_6_20[threshcount];
+      Double_t threshresult120[threshcount];
 
 
-
-      fitter( run3[j], 3.3 );
-      threshresult3[j] = m26_resolution*1000.0;
-      thresherror3[j] = global_plot_error;
-
-
-
-      fitter( run4[j], 4.84 );
-      threshresult4[j] = m26_resolution*1000.0;
-      thresherror4[j] = global_plot_error;
-      fitter( run5[j], 5.5 );
-      threshresult5[j] = m26_resolution*1000.0;
-      thresherror5[j] = global_plot_error;
-
-      /*
-	 fitter( run120[j], 120.0 );
-	 threshresult120[j] = m26_resolution*1000.0;
-	 thresherror120[j] = global_plot_error;
+      Double_t thresherror_2_150[threshcount];
+      Double_t thresherror_3_150[threshcount];
+      Double_t thresherror_4_150[threshcount];
+      Double_t thresherror_5_150[threshcount];
+      Double_t thresherror_6_150[threshcount];
+      Double_t thresherror_2_20[threshcount];
+      Double_t thresherror_3_20[threshcount];
+      Double_t thresherror_4_20[threshcount];
+      Double_t thresherror_5_20[threshcount];
+      Double_t thresherror_6_20[threshcount];
+      Double_t thresherror120[threshcount];
 
 
+      Double_t x[threshcount];
+      Double_t xerrorthresh[threshcount];
+      for (Int_t j=0;j<(threshcount-2);j++)
+      {
+
+        telescopebuild = "AnaTel.geom";
+	planedistance = 150;
+	for(int jj=0;jj<nplanes;jj++)
+	  posx[jj] = planedistance*jj;
+
+
+	x[j] = j+3;
+	global_thresh = x[j];
+	xerrorthresh[j] = 0.0;
+	submask = "";
+
+
+	fitter( run_2_150[j], 2.0 ); 
+	threshresult_2_150[j] = m26_resolution*1000.0;
+	thresherror_2_150[j] = global_plot_error;
+
+	fitter( run_3_150[j], 3.0 );
+	threshresult_3_150[j] = m26_resolution*1000.0;
+	thresherror_3_150[j] = global_plot_error;
+
+	fitter( run_4_150[j], 4.0 );
+	threshresult_4_150[j] = m26_resolution*1000.0;
+	thresherror_4_150[j] = global_plot_error;
+
+	fitter( run_5_150[j], 5.0 );
+	threshresult_5_150[j] = m26_resolution*1000.0;
+	thresherror_5_150[j] = global_plot_error;
+
+	fitter( run_6_150[j], 6.0 );
+	threshresult_6_150[j] = m26_resolution*1000.0;
+	thresherror_6_150[j] = global_plot_error;
+
+	
+	fitter( run120[j], 120.0 );
+	threshresult120[j] = m26_resolution*1000.0;
+	thresherror120[j] = global_plot_error;
+	         
+
+        telescopebuild = "AnaTel_thin.geom";
+	planedistance = 20;
+	for(int jj=0;jj<nplanes;jj++)
+	  posx[jj] = planedistance*jj;
 
 
 
-         telescopebuild = "AnaTel_thin.geom";
-	 planedistance = 20;
-	 for(int jj=0;jj<nplanes;jj++)
-	 posx[jj] = planedistance*jj;
+	fitter( run_2_20[j], 2.0 );
+	threshresult_2_20[j] = m26_resolution*1000.0;
+	thresherror_2_20[j] = global_plot_error;
+
+	fitter( run_3_20[j], 3.0 );
+	threshresult_3_20[j] = m26_resolution*1000.0;
+	thresherror_3_20[j] = global_plot_error;
+
+	fitter( run_4_20[j], 4.0 );
+	threshresult_4_20[j] = m26_resolution*1000.0;
+	thresherror_4_20[j] = global_plot_error;
+
+	fitter( run_5_20[j], 5.0 );
+	threshresult_5_20[j] = m26_resolution*1000.0;
+	thresherror_5_20[j] = global_plot_error;
+
+	fitter( run_6_20[j], 6.0 );
+	threshresult_6_20[j] = m26_resolution*1000.0;
+	thresherror_6_20[j] = global_plot_error;
 
 
+      }
 
-	 fitter( run2th[j], 2.0 );
-	 threshresult2th[j] = m26_resolution*1000.0;
-	 thresherror2th[j] = global_plot_error;
+      TGraphErrors *gr2_150 = new TGraphErrors((threshcount-2),x,threshresult_2_150,xerrorthresh,thresherror_2_150);
+      TGraphErrors *gr3_150 = new TGraphErrors((threshcount-2),x,threshresult_3_150,xerrorthresh,thresherror_3_150);
+      TGraphErrors *gr4_150 = new TGraphErrors((threshcount-2),x,threshresult_4_150,xerrorthresh,thresherror_4_150);
+      TGraphErrors *gr5_150 = new TGraphErrors((threshcount-2),x,threshresult_5_150,xerrorthresh,thresherror_5_150);
+      TGraphErrors *gr6_150 = new TGraphErrors((threshcount-2),x,threshresult_6_150,xerrorthresh,thresherror_6_150);
+      TGraphErrors *gr120 = new TGraphErrors((threshcount-2),x,threshresult120,xerrorthresh,thresherror120);
 
-	 fitter( run3th[j], 3.0 );
-	 threshresult3th[j] = m26_resolution*1000.0;
-	 thresherror3th[j] = global_plot_error;
+      TGraphErrors *gr2_20  = new TGraphErrors((threshcount-2),x,threshresult_2_20,xerrorthresh,thresherror_2_20);
+      TGraphErrors *gr3_20  = new TGraphErrors((threshcount-2),x,threshresult_3_20,xerrorthresh,thresherror_3_20);
+      TGraphErrors *gr4_20  = new TGraphErrors((threshcount-2),x,threshresult_4_20,xerrorthresh,thresherror_4_20);
+      TGraphErrors *gr5_20  = new TGraphErrors((threshcount-2),x,threshresult_5_20,xerrorthresh,thresherror_5_20);
+      TGraphErrors *gr6_20  = new TGraphErrors((threshcount-2),x,threshresult_6_20,xerrorthresh,thresherror_6_20);
 
-	 fitter( run5th[j], 5.0 );
-	 threshresult5th[j] = m26_resolution*1000.0;
-	 thresherror5th[j] = global_plot_error;
+      TCanvas *threshold = new TCanvas("threshold","threshold",10,10,800,600);
+      threshold->cd();
 
-       */
+
+      //TH1D *h_axis = new TH1D("th_axis","th_axis",1, 2.0, 13.0);
+      gStyle->SetPadBorderMode(0);
+      gStyle->SetOptStat(0);
+      threshold->SetFillColor(0);
+      //gPad->SetGridx();
+      //gPad->SetGridy();
+
+      gr2_150->SetMarkerStyle(20);
+      gr2_150->SetMarkerColor(kBlack);
+      gr2_150->SetMarkerSize(3);
+      gr3_150->SetMarkerStyle(21);
+      gr3_150->SetMarkerColor(kGreen);
+      gr3_150->SetMarkerSize(3);
+      gr4_150->SetMarkerStyle(22);
+      gr4_150->SetMarkerColor(kRed);
+      gr4_150->SetMarkerSize(3);
+      gr5_150->SetMarkerStyle(23);
+      gr5_150->SetMarkerColor(kBlue);
+      gr5_150->SetMarkerSize(3);
+      gr6_150->SetMarkerStyle(29);
+      gr6_150->SetMarkerColor(kOrange);
+      gr6_150->SetMarkerSize(3);
+      gr120->SetMarkerStyle(3);
+      gr120->SetMarkerColor(kMagenta);
+      gr120->SetMarkerSize(3);
+
+      gr2_20->SetMarkerStyle(24);
+      gr2_20->SetMarkerColor(kBlack);
+      gr2_20->SetMarkerSize(3);
+      gr3_20->SetMarkerStyle(25);
+      gr3_20->SetMarkerColor(kGreen);
+      gr3_20->SetMarkerSize(3);
+      gr4_20->SetMarkerStyle(26);
+      gr4_20->SetMarkerColor(kGreen);
+      gr4_20->SetMarkerSize(3);
+      gr5_20->SetMarkerStyle(27);
+      gr5_20->SetMarkerColor(kBlue);
+      gr5_20->SetMarkerSize(3);
+      gr6_20->SetMarkerStyle(28);
+      gr6_20->SetMarkerColor(kOrange);
+      gr6_20->SetMarkerSize(3);
+
+      TMultiGraph* mg = new TMultiGraph();
+
+      mg->Add(gr2_150,"p");
+      mg->Add(gr3_150,"p");
+      mg->Add(gr4_150,"p");
+      mg->Add(gr5_150,"p");
+      mg->Add(gr6_150,"p");
+      mg->Add(gr120,"p");
+      mg->Add(gr2_20,"p");
+      mg->Add(gr3_20,"p");
+      mg->Add(gr4_20,"p");
+      mg->Add(gr5_20,"p");
+      mg->Add(gr6_20,"p");
+
+      mg->Draw("apl");
+      mg->SetMinimum(0);
+      mg->GetXaxis()->SetLimits(2,13);
+      mg->GetXaxis()->SetTitle("Threshold #xi");
+      mg->GetYaxis()->SetTitle("#sigma_{M26} [#mum]");
+
+
+      TLegend *leg = new TLegend(0.59,0.55,0.90,0.85);
+      leg->SetBorderSize(0);
+      leg->SetFillColor(0);
+      leg->SetFillStyle(0);
+      leg->SetHeader("Energy:");
+      leg->AddEntry(gr2_150,"p = 2 GeV, #Delta_{z} = 150 mm","p");
+      leg->AddEntry(gr3_150,"p = 3 GeV, #Delta_{z} = 150 mm","p");
+      leg->AddEntry(gr4_150,"p = 4 GeV, #Delta_{z} = 150 mm","p");
+      leg->AddEntry(gr5_150,"p = 5 GeV, #Delta_{z} = 150 mm","p");
+      leg->AddEntry(gr6_150,"p = 6 GeV, #Delta_{z} = 150 mm","p");
+      leg->AddEntry(gr120,"p = 120 GeV, #Delta_{z} = 150 mm","p");
+
+      leg->AddEntry(gr2_20,"p = 2 GeV, #Delta_{z} = 20 mm","p");
+      leg->AddEntry(gr3_20,"p = 3 GeV, #Delta_{z} = 20 mm","p");
+      leg->AddEntry(gr4_20,"p = 4 GeV, #Delta_{z} = 20 mm","p");
+      leg->AddEntry(gr5_20,"p = 5 GeV, #Delta_{z} = 20 mm","p");
+      leg->AddEntry(gr6_20,"p = 6 GeV, #Delta_{z} = 20 mm","p");
+
+      leg->Draw();
+
+      // Output
+      threshold->Print("pics/threshold_all.eps");
+      _outputFile->cd();
+      threshold->Write();
+      threshold->Close();
     }
-
-    TGraphErrors *gr2 = new TGraphErrors((threshcount-2),x,threshresult2,xerrorthresh,thresherror2);
-    TGraphErrors *gr3 = new TGraphErrors((threshcount-2),x,threshresult3,xerrorthresh,thresherror3);
-    TGraphErrors *gr4 = new TGraphErrors((threshcount-2),x,threshresult4,xerrorthresh,thresherror4);
-    TGraphErrors *gr5 = new TGraphErrors((threshcount-2),x,threshresult5,xerrorthresh,thresherror5);
-    TGraphErrors *gr120 = new TGraphErrors((threshcount-2),x,threshresult120,xerrorthresh,thresherror120);
-
-    TGraphErrors *gr2th = new TGraphErrors((threshcount-2),x,threshresult2th,xerrorthresh,thresherror2th);
-    TGraphErrors *gr3th = new TGraphErrors((threshcount-2),x,threshresult3th,xerrorthresh,thresherror3th);
-    TGraphErrors *gr5th = new TGraphErrors((threshcount-2),x,threshresult5th,xerrorthresh,thresherror5th);
-
-    TH1D *h_axis = new TH1D("th_axis","th_axis",1, 2.0, 13.0);
-    TCanvas *threshold = new TCanvas("threshold","threshold",10,10,800,600);
-    gStyle->SetPadBorderMode(0);
-    gStyle->SetOptStat(0);
-    threshold->SetFillColor(0);
-    threshold->Divide(1,1);
-    threshold->cd(1);
-    gStyle->SetErrorX(0);
-    gPad->SetLogx(0);
-    gPad->SetLogy(0);
-    gPad->SetGridx();
-    gPad->SetGridy();
-
-    gr2->SetMarkerStyle(20);
-    gr2->SetMarkerColor(kBlack);
-    gr2->SetMarkerSize(3);
-    gr3->SetMarkerStyle(21);
-    gr3->SetMarkerColor(kGreen);
-    gr3->SetMarkerSize(3);
-    gr4->SetMarkerStyle(22);
-    gr4->SetMarkerColor(kRed);
-    gr4->SetMarkerSize(3);
-    gr5->SetMarkerStyle(23);
-    gr5->SetMarkerColor(kBlue);
-    gr5->SetMarkerSize(3);
-    gr120->SetMarkerStyle(23);
-    gr120->SetMarkerColor(kOrange);
-    gr120->SetMarkerSize(3);
-
-    gr2th->SetMarkerStyle(24);
-    gr2th->SetMarkerColor(kBlack);
-    gr2th->SetMarkerSize(3);
-    gr3th->SetMarkerStyle(25);
-    gr3th->SetMarkerColor(kGreen);
-    gr3th->SetMarkerSize(3);
-    gr5th->SetMarkerStyle(26);
-    gr5th->SetMarkerColor(kBlue);
-    gr5th->SetMarkerSize(3);
-
-    histo_cfg(h_axis, "Threshold (s/n)","#sigma_{M26} (#mum)","");
-    h_axis->SetMinimum(0.0);
-    h_axis->SetMaximum(5.0);
-    h_axis->Draw("hist");
-    gr2->Draw("P");
-    gr3->Draw("P");
-    gr4->Draw("P");
-    gr5->Draw("P");
-    gr120->Draw("P");
-
-    gr2th->Draw("P");
-    gr3th->Draw("P");
-    gr5th->Draw("P");
-
-
-    TLegend *leg = new TLegend(0.59,0.55,0.90,0.85);
-    leg->SetBorderSize(0);
-    leg->SetFillColor(0);
-    leg->SetFillStyle(0);
-    leg->SetHeader("Energy:");
-    leg->AddEntry(gr2,"p = 2 GeV, #Delta_{z} = 150 mm","p");
-    leg->AddEntry(gr3,"p = 3 GeV, #Delta_{z} = 150 mm","p");
-    leg->AddEntry(gr4,"p = 4.4 GeV, #Delta_{z} = 150 mm","p");
-    leg->AddEntry(gr5,"p = 5 GeV, #Delta_{z} = 150 mm","p");
-    leg->AddEntry(gr120,"p = 120 GeV, #Delta_{z} = 150 mm","p");
-
-    leg->AddEntry(gr2th,"p = 2 GeV, #Delta_{z} = 20 mm","p");
-    leg->AddEntry(gr3th,"p = 3 GeV, #Delta_{z} = 20 mm","p");
-    leg->AddEntry(gr5th,"p = 5 GeV, #Delta_{z} = 20 mm","p");
-
-    leg->Draw();
-
-    // Output
-    threshold->Print("pics/threshold_all.eps");
-    _outputFile->cd();
-    threshold->Write();
-    threshold->Close();
-  }
 
   // Run over thresholds (x) and clustersize (y), res is z, geometry needs reset and thin implementing
   if(runmode == 3)
@@ -2176,16 +2207,16 @@ int main()
 	submask = convert.str();
 	if (i == 0)
 	  submask = "";
-	/*	fitter( run2[j], 2.0 );
+	/*	fitter( run_2_150[j], 2.0 );
 		threshresult2[j][i] = m26_resolution*1000.0;
 		thresherror2[j][i] = m26_res_error*1000.0;
-		fitter( run3[j], 3.0 );
+		fitter( run_3_150[j], 3.0 );
 		threshresult3[j][i] = m26_resolution*1000.0;
 		thresherror3[j][i] = m26_res_error*1000.0; */
-	fitter( run4[j], 4.4 );
+	fitter( run_4_150[j], 4.4 );
 	threshresult4[j][i] = m26_resolution*1000.0;
 	thresherror4[j][i] = m26_res_error*1000.0;
-	/*	fitter( run5[j], 5.0 );
+	/*	fitter( run_5_150[j], 5.0 );
 		threshresult5[j][i] = m26_resolution*1000.0;
 		thresherror5[j][i] = m26_res_error*1000.0; */
       }
@@ -2381,9 +2412,9 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = 150.0*j;
 
-    for(int i=0;i<run2.size();i++)
+    for(int i=0;i<run_2_150.size();i++)
     {
-      noise( run2[i] );
+      noise( run_2_150[i] );
       x[i] = i+3-0.15;
       threshnoise2[i] = avgnoise;
       thresheffi2[i] = avgeffi;
@@ -2391,9 +2422,9 @@ int main()
       thresheffi2_error[i] = avgeffi_error;
     }
 
-    for(int i=0;i<run3.size();i++)
+    for(int i=0;i<run_3_150.size();i++)
     {
-      noise( run3[i] );
+      noise( run_3_150[i] );
       x[i] = i+3-0.1;
       threshnoise3[i] = avgnoise;
       thresheffi3[i] = avgeffi;
@@ -2401,9 +2432,9 @@ int main()
       thresheffi3_error[i] = avgeffi_error;
     }
 
-    for(int i=0;i<run4.size();i++)
+    for(int i=0;i<run_4_150.size();i++)
     {
-      noise( run4[i] );
+      noise( run_4_150[i] );
       x[i] = i+3-0.05;
       threshnoise4[i] = avgnoise;
       thresheffi4[i] = avgeffi;
@@ -2411,9 +2442,9 @@ int main()
       thresheffi4_error[i] = avgeffi_error;
     }
 
-    for(int i=0;i<run5.size();i++)
+    for(int i=0;i<run_5_150.size();i++)
     {
-      noise( run5[i] );
+      noise( run_5_150[i] );
       x[i] = i+3;
       threshnoise5[i] = avgnoise;
       thresheffi5[i] = avgeffi;
@@ -2431,9 +2462,9 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = 20.0*j;
 
-    for(int i=0;i<run2th.size();i++)
+    for(int i=0;i<run_2_20.size();i++)
     {
-      noise( run2th[i] );
+      noise( run_2_20[i] );
       x[i] = i+3+0.05;
       thin_threshnoise2[i] = avgnoise;
       thin_thresheffi2[i] = avgeffi;
@@ -2441,9 +2472,9 @@ int main()
       thin_thresheffi2_error[i] = avgeffi_error;
     }
 
-    for(int i=0;i<run3th.size();i++)
+    for(int i=0;i<run_3_20.size();i++)
     {
-      noise( run3th[i] );
+      noise( run_3_20[i] );
       x[i] = i+3+0.1;
       thin_threshnoise3[i] = avgnoise;
       thin_thresheffi3[i] = avgeffi;
@@ -2451,9 +2482,9 @@ int main()
       thin_thresheffi3_error[i] = avgeffi_error;
     }
 
-    for(int i=0;i<run5th.size();i++)
+    for(int i=0;i<run_5_20.size();i++)
     {
-      noise( run5th[i] );
+      noise( run_5_20[i] );
       x[i] = i+3+0.15;
       thin_threshnoise5[i] = avgnoise;
       thin_thresheffi5[i] = avgeffi;
@@ -2728,33 +2759,33 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = 150.0*j;
 
-    for(int i=0;i<run2.size();i++)
+    for(int i=0;i<run_2_150.size();i++)
     {
-      getclusize( run2[i] );
+      getclusize( run_2_150[i] );
       x[i] = i+3;
       threshcluster2[i] = avgclustersize;
       threshcluster2_error[i] = avgclustersize_error;
     }
 
-    for(int i=0;i<run3.size();i++)
+    for(int i=0;i<run_3_150.size();i++)
     {
-      getclusize( run3[i] );
+      getclusize( run_3_150[i] );
       x[i] = i+3;
       threshcluster3[i] = avgclustersize;
       threshcluster3_error[i] = avgclustersize_error;
     }
 
-    for(int i=0;i<run4.size();i++)
+    for(int i=0;i<run_4_150.size();i++)
     {
-      getclusize( run4[i] );
+      getclusize( run_4_150[i] );
       x[i] = i+3;
       threshcluster4[i] = avgclustersize;
       threshcluster4_error[i] = avgclustersize_error;
     }
 
-    for(int i=0;i<run5.size();i++)
+    for(int i=0;i<run_5_150.size();i++)
     {
-      getclusize( run5[i] );
+      getclusize( run_5_150[i] );
       x[i] = i+3;
       threshcluster5[i] = avgclustersize;
       threshcluster5_error[i] = avgclustersize_error;
@@ -2778,25 +2809,25 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = 20.0*j;
 
-    for(int i=0;i<run2th.size();i++)
+    for(int i=0;i<run_2_20.size();i++)
     {
-      getclusize( run2th[i] );
+      getclusize( run_2_20[i] );
       x[i] = i+3;
       thin_threshcluster2[i] = avgclustersize;
       thin_threshcluster2_error[i] = avgclustersize_error;
     }
 
-    for(int i=0;i<run3th.size();i++)
+    for(int i=0;i<run_3_20.size();i++)
     {
-      getclusize( run3th[i] );
+      getclusize( run_3_20[i] );
       x[i] = i+3;
       thin_threshcluster3[i] = avgclustersize;
       thin_threshcluster3_error[i] = avgclustersize_error;
     }
 
-    for(int i=0;i<run5th.size();i++)
+    for(int i=0;i<run_5_20.size();i++)
     {
-      getclusize( run5th[i] );
+      getclusize( run_5_20[i] );
       x[i] = i+3;
       thin_threshcluster5[i] = avgclustersize;
       thin_threshcluster5_error[i] = avgclustersize_error;
@@ -2916,25 +2947,25 @@ int main()
     double thresh = 6-3;
     // x -3 with x the threshold
 
-    getpointing( run2[thresh] , 3.415567);
+    getpointing( run_2_150[thresh] , 3.415567);
     x[0] = 2;
     xerror[0] = 0.2;
     threshcluster2[0] = avgmeas;
     threshcluster2_error[0] = avgmeas_error;
 
-    getpointing( run3[thresh] , 3.468273);
+    getpointing( run_3_150[thresh] , 3.468273);
     x[1] = 3;
     xerror[1] = 0.3;
     threshcluster2[1] = avgmeas;
     threshcluster2_error[1] = avgmeas_error;
 
-    getpointing( run4[thresh] , 3.530031);
+    getpointing( run_4_150[thresh] , 3.530031);
     x[2] = 4.4;
     xerror[2] = 0.44;
     threshcluster2[2] = avgmeas;
     threshcluster2_error[2] = avgmeas_error;
 
-    getpointing( run5[thresh] , 3.444235);
+    getpointing( run_5_150[thresh] , 3.444235);
     x[3] = 5;
     xerror[3] = 0.5;
     threshcluster2[3] = avgmeas;
@@ -2951,19 +2982,19 @@ int main()
     threshcluster2[4] = avgmeas;
     threshcluster2_error[4] = avgmeas_error;
 
-    getpointing( run2th[thresh] , 3.490106);
+    getpointing( run_2_20[thresh] , 3.490106);
     xw[0] = 2;
     xwerror[0] = 0.2;
     threshcluster2w[0] = avgmeas;
     threshcluster2w_error[0] = avgmeas_error;
 
-    getpointing( run3th[thresh] , 3.445178);
+    getpointing( run_3_20[thresh] , 3.445178);
     xw[1] = 3;
     xwerror[1] = 0.3;
     threshcluster2w[1] = avgmeas;
     threshcluster2w_error[1] = avgmeas_error;
 
-    getpointing( run5th[thresh] , 3.420506);
+    getpointing( run_5_20[thresh] , 3.420506);
     xw[2] = 5;
     xwerror[2] = 0.5;
     threshcluster2w[2] = avgmeas;
@@ -3090,14 +3121,14 @@ int main()
 
     for (int i = 0;i<10;i++)
     {
-      histoplot (run2[i]);
-      histoplot (run3[i]);
-      histoplot (run4[i]);
-      histoplot (run5[i]);
+      histoplot (run_2_150[i]);
+      histoplot (run_3_150[i]);
+      histoplot (run_4_150[i]);
+      histoplot (run_5_150[i]);
       histoplot (run120[i]);
-      histoplot (run5th[i]);
-      histoplot (run3th[i]);
-      histoplot (run2th[i]);
+      histoplot (run_5_20[i]);
+      histoplot (run_3_20[i]);
+      histoplot (run_2_20[i]);
 
     }
 
