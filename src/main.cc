@@ -158,11 +158,12 @@ class  MyFunctionObject2D_beam {
     double getchi2_2D(Double_t *par, Double_t *p)
     {
       // cout << "chi2call" << endl;
-      std::cout << " Current intrinsic resolution: " << par[0] << std::endl;
+      //std::cout << " Current intrinsic resolution: " << par[0] << std::endl;
       tl->SetResolution(par[0]);
       tl->SetResolutionGBL(par[0]);
       //tl->SetBeam(par[1], par[2]);
       tl->SetBeam(par[1], 0.0);
+      tl->SetBeamGBL(par[1], 0.0);
       //tl->SetThickness(par[3]);
       Double_t chi2 =0.0;
       Double_t chi2GBL =0.0;
@@ -171,8 +172,8 @@ class  MyFunctionObject2D_beam {
       {
 	float w    = tl->GetWidth(j,0);
 	float wGBL = tl->GetWidthGBL(j,0);
-	std::cout << " w for plane " << j << " is " << w << ",    wGBL for plane " << j << " is " << wGBL << std::endl;
-	std::cout << " w measured for plane " << j << " is " << measured1[j] << " +- " << error1[j] << std::endl;
+	//std::cout << " w for plane " << j << " is " << w << ",    wGBL for plane " << j << " is " << wGBL << std::endl;
+	//std::cout << " w measured for plane " << j << " is " << measured1[j] << " +- " << error1[j] << std::endl;
 	
 	chi2    += pow( (w    - measured1[j])/(error1[j]) ,2) + pow( (w    - measured2[j])/(error2[j]) ,2) ; 
 	chi2GBL += pow( (wGBL - measured1[j])/(error1[j]) ,2) + pow( (wGBL - measured2[j])/(error2[j]) ,2) ; 
@@ -390,7 +391,7 @@ void run_global( Double_t ebeam, Double_t *obsresol_x, Double_t* obsresol_error_
   TMinuit *gMinuit = new TMinuit(4);
 
   // set print level (-1 = quiet, 0 = normal, 1 = verbose)
-  gMinuit->SetPrintLevel(1);
+  gMinuit->SetPrintLevel(0);
 
   // give the function
   gMinuit->SetFCN(fcn_wrapper);
@@ -406,7 +407,7 @@ void run_global( Double_t ebeam, Double_t *obsresol_x, Double_t* obsresol_error_
   gMinuit->mnexcm("SET ERR",arglist,1,ierflg);
 
   // Set starting values and step sizes for parameters
-  Double_t vstart[4] = {0.0050, ebeam,   0.0, 0.05 };
+  Double_t vstart[4] = {0.00342, ebeam,   0.0, 0.05 };
   Double_t step[4]   = {0.0001,   0.1, 0.001, 0.001};
 
   /* orig:
@@ -416,13 +417,13 @@ void run_global( Double_t ebeam, Double_t *obsresol_x, Double_t* obsresol_error_
      gMinuit->mnparm(3, "thickness", vstart[3], step[3],      0.05,      0.100, ierflg);
 
    */
-  gMinuit->mnparm(0, "m26resol" , vstart[0], step[0],    0.001,      0.020, ierflg);
-  gMinuit->mnparm(1, "pbeam"    , vstart[1], step[1], 0.9*ebeam,  1.1*ebeam, ierflg);
-  gMinuit->mnparm(2, "spread"   , vstart[2], step[2],     0.00,        0.1, ierflg);
+  gMinuit->mnparm(0, "m26resol" , vstart[0], step[0],    0.001,       0.020, ierflg);
+  gMinuit->mnparm(1, "pbeam"    , vstart[1], step[1], 0.1*ebeam,  10.*ebeam, ierflg);
+  gMinuit->mnparm(2, "spread"   , vstart[2], step[2],     0.00,         0.1, ierflg);
   gMinuit->mnparm(3, "thickness", vstart[3], step[3],     0.04,        0.06, ierflg);
 
-  //gMinuit->FixParameter(0);
-  gMinuit->FixParameter(1);
+  gMinuit->FixParameter(0);
+  //gMinuit->FixParameter(1);
   gMinuit->FixParameter(2);
   gMinuit->FixParameter(3);
 
@@ -1832,14 +1833,14 @@ int main()
     for(int j=0;j<nplanes;j++)
       posx[j] = planedistance*j;
 
-      //fitter(63,6.);
-      //fitter(73,5.);
-      //fitter(84,4.);
-      //fitter(96,3.);
-      //fitter(106,2.);
+      fitter(63,6.);
+      fitter(73,5.);
+      fitter(84,4.);
+      fitter(96,3.);
+      fitter(106,2.);
       
       // CERN
-      //fitter(755,120.);
+      fitter(755,120.);
 
 
 
@@ -1849,10 +1850,10 @@ int main()
       posx[j] = planedistance*j;
 
       fitter(117,6.);
-      //fitter(127,5.);
-      //fitter(137,4.);
-      //fitter(153,3.);
-      //fitter(165,2.);
+      fitter(127,5.);
+      fitter(137,4.);
+      fitter(153,3.);
+      fitter(165,2.);
 
 
   }

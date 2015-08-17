@@ -22,7 +22,7 @@
 Author: H. Jansen
 email hendrik.jansen@desy.de
 Date: 3.8.15
- */
+*/
 
 #include "GblTrajectory.h"
 #include "GblPoint.h"
@@ -44,7 +44,7 @@ TMatrixD Jac5( double ds )
      track = 
      q/p, x', y', x, y
      0,   1,  2,  3, 4
-   */
+     */
   TMatrixD jac(5, 5);
   jac.UnitMatrix();
   jac[3][1] = ds; // x = xp * ds
@@ -259,10 +259,10 @@ AnaTel::AnaTel(std::string GeomFile, double _eBeam)
   PrintID();
   // Print some data
   /*for(int i = 0; i < _listOfPoints.size(); i++)
-  {
+    {
     std::cout << "point " << i << " at " << _sPoint[i] << " has scatterer " << _listOfPoints[i].hasScatterer() << ", has measurement " << _listOfPoints[i].hasMeasurement() << std::endl;
 
-  }*/
+    }*/
 
 
 }
@@ -420,18 +420,21 @@ void  AnaTel::SetBeamGBL(Double_t Energy, Double_t Spread)
     scat.Zero(); // mean is zero
     _listOfPoints[_ID[ipl]].addScatterer(scat, wscatSi);
 
-    _dz = _planePosition[ipl] - _planePosition[ipl-1];
-    _X0_Air_frac =   0.5*_dz  / _X0_Air; // seee constructor 
-    tetAir = 0.0136 * sqrt(_X0_Air_frac) / _eBeam * ( 1 + 0.038*log(_X0_Air_frac) );
 
-    wscatAir[0] = 1.0 / ( tetAir * tetAir ); // weight
-    wscatAir[1] = 1.0 / ( tetAir * tetAir );
+    if(ipl > 0)
+    {
+      _dz = _planePosition[ipl] - _planePosition[ipl-1];
+      _X0_Air_frac =   0.5*_dz  / _X0_Air; // seee constructor 
+      tetAir = 0.0136 * sqrt(_X0_Air_frac) / _eBeam * ( 1 + 0.038*log(_X0_Air_frac) );
 
-    if(ipl != _nTelPlanes -1){ // do not addScatterer after last plane
-      _listOfPoints[_ID[ipl]+1].addScatterer(scat, wscatAir);
-      _listOfPoints[_ID[ipl]+2].addScatterer(scat, wscatAir);
+      wscatAir[0] = 1.0 / ( tetAir * tetAir ); // weight
+      wscatAir[1] = 1.0 / ( tetAir * tetAir );
+
+      if(ipl != _nTelPlanes -1){ // do not addScatterer after last plane
+	_listOfPoints[_ID[ipl]+1].addScatterer(scat, wscatAir);
+	_listOfPoints[_ID[ipl]+2].addScatterer(scat, wscatAir);
+      }
     }
-
 
   }
 }
@@ -621,7 +624,7 @@ Double_t AnaTel::GetPointingResGBL(Int_t Ipl, Bool_t UseInFit)
 
     TMatrixD proL2m(2,2);
     proL2m.UnitMatrix();
-    
+
     //std::cout << " Disabling plane " << Ipl << " at point " << _ID[Ipl] << std::endl;
 
     _listOfPoints[_ID[Ipl]].addMeasurement(proL2m, meas, measPrec);
@@ -629,10 +632,10 @@ Double_t AnaTel::GetPointingResGBL(Int_t Ipl, Bool_t UseInFit)
 
   // Print some data
   /*for(int i = 0; i < _listOfPoints.size(); i++)
-  {
+    {
     std::cout << "point " << i << " at " << _sPoint[i] << " has scatterer " << _listOfPoints[i].hasScatterer() << ", has measurement " << _listOfPoints[i].hasMeasurement() << std::endl;
 
-  }*/
+    }*/
 
   // fit trajectory:
 
@@ -655,7 +658,7 @@ Double_t AnaTel::GetPointingResGBL(Int_t Ipl, Bool_t UseInFit)
     traj.getResults( _ID[ipl], aCorrection, aCovariance );
     _pointingResolution[ipl] =  sqrt(aCovariance(3,3));
   }
-  
+
   if(!UseInFit){
     // measurement = residual
     TVectorD meas(2);
@@ -668,7 +671,7 @@ Double_t AnaTel::GetPointingResGBL(Int_t Ipl, Bool_t UseInFit)
 
     TMatrixD proL2m(2,2);
     proL2m.UnitMatrix();
-    
+
     //std::cout << " Enabling plane " << Ipl << " at point " << _ID[Ipl] << std::endl;
 
     _listOfPoints[_ID[Ipl]].addMeasurement(proL2m, meas, measPrec);
