@@ -52,7 +52,7 @@ TMatrixD Jac5( double ds )
   return jac;
 }
 
-gbl::GblPoint AnaTel::getPoint(double step, double res, TVectorD wscat, bool has_meas) {
+gbl::GblPoint AnaTel::getPoint(double step, double res, TVectorD wscat, bool IsPlane, bool has_meas) {
 
   // Propagate:
   TMatrixD jacPointToPoint = Jac5(step);
@@ -79,25 +79,25 @@ gbl::GblPoint AnaTel::getPoint(double step, double res, TVectorD wscat, bool has
 
     point.addMeasurement(proL2m, meas, measPrec);
 
-    _ID.push_back(_sPoint.size());
   }
 
-  //std::cout << " s was = " << _s << ", now adding step of " << step << std::endl;
-  //std::cout << " pushing s = " <<  _s + step << std::endl;
+  if(IsPlane) _ID.push_back(_sPoint.size());
+
   _s += step;
   _sPoint.push_back(_s);
 
   return point;
 }
 
-gbl::GblPoint AnaTel::getPoint(double step, TVectorD wscat) {
+gbl::GblPoint AnaTel::getPoint(double step, TVectorD wscat, bool IsPlane) {
   // This does not add a measurement - no resultion is given!
-  return AnaTel::getPoint(step, 0.0, wscat, false);
+  return AnaTel::getPoint(step, 0.0, wscat, IsPlane, false);
 }
 
 AnaTel::AnaTel(std::string GeomFile, double _eBeam)
 {
 
+  AnaTel::SetBeam(_eBeam, 0.0);
   ifstream geometryFile;
 
   std::string help = "../geometries/";
@@ -206,64 +206,9 @@ AnaTel::AnaTel(std::string GeomFile, double _eBeam)
 
   // GBL
 
-  std::cout << "Building the GBL t'scope " << std::endl;
-  _listOfPoints.reserve(3*6);
-  //double X0_Si_frac = 50.e-3 / 94 ; // Si only
-
-  unsigned int ipl = 0;
-  double step = 0;
   _s = 0;
-  double tetSi, tetDUT, tetAir;
-
-  TVectorD wscatSi(2); // FIXME can these be in the header ?
-  TVectorD wscatDUT(2);
-  TVectorD wscatAir(2);
-
-  std::cout << "E = " << _eBeam << std::endl;
-  while(1)
-  {
-    _X0_Si_frac = _planeThickness[ipl] / _X0_Si + 50.e-3 / _X0_Kapton; // Si + Kapton per plane
-    if(ipl == 0) std::cout << "X0 fraction of sensors = " << _X0_Si_frac << std::endl; // FIXME add verbose level
-
-    tetSi  = 0.0136 * sqrt(_X0_Si_frac) / _eBeam * ( 1 + 0.038*log(_X0_Si_frac) );
-    //tetDUT = 0.0136 * sqrt(_X0_DUT_frac) / _eBeam * ( 1 + 0.038*log(_X0_DUT_frac) ); // FIXME for now w/o DUT
-
-    wscatSi[0] = 1.0 / ( tetSi * tetSi ); // weight
-    wscatSi[1] = 1.0 / ( tetSi * tetSi );
-
-    //wscatDUT[0] = 1.0 / ( tetDUT * tetDUT ); // weight // FIXME for now w/o DUT
-    //wscatDUT[1] = 1.0 / ( tetDUT * tetDUT );
-
-
-
-    _listOfPoints.push_back(AnaTel::getPoint(step, _planeResolution[ipl], wscatSi)); // add plane, at first all planes have measurement enabled
-    ipl++;
-    if(ipl == _nTelPlanes) break;
-    _dz = _planePosition[ipl] - _planePosition[ipl-1];
-    _X0_Air_frac =   0.5*_dz  / _X0_Air; // Air between planes; Factor 0.5 as the air is devided into two scatterers
-    tetAir = 0.0136 * sqrt(_X0_Air_frac) / _eBeam * ( 1 + 0.038*log(_X0_Air_frac) );
-
-    wscatAir[0] = 1.0 / ( tetAir * tetAir ); // weight
-    wscatAir[1] = 1.0 / ( tetAir * tetAir );
-
-
-    step = 0.21*_dz;
-    _listOfPoints.push_back(AnaTel::getPoint(step, wscatAir)); // add air, not added after last plane
-    step = 0.58*_dz;
-    _listOfPoints.push_back(AnaTel::getPoint(step, wscatAir)); // add air, not added after last plane
-    step = 0.21*_dz;
-
-
-  }
-
-  PrintID();
-  // Print some data
-  /*for(int i = 0; i < _listOfPoints.size(); i++)
-    {
-    std::cout << "point " << i << " at " << _sPoint[i] << " has scatterer " << _listOfPoints[i].hasScatterer() << ", has measurement " << _listOfPoints[i].hasMeasurement() << std::endl;
-
-    }*/
-
+  _sPoint.clear();
+  _listOfPoints.clear();
 
 }
 
@@ -380,99 +325,16 @@ void  AnaTel::SetBeam(Double_t Energy, Double_t Spread)
 
 }
 
-void  AnaTel::SetBeamGBL(Double_t Energy, Double_t Spread)
-{
-  _eBeam = Energy;
-
-  if(Spread>0.)
-  {
-    _useBeamConstraint= true ;
-    _beamSpread = Spread;
-  }
-  else
-  {
-    _useBeamConstraint= false ;
-    _beamSpread = 0.;
-  }
-
-  double tetSi, tetDUT, tetAir;
-
-  TVectorD wscatSi(2); // FIXME can these be in the header ?
-  //TVectorD wscatDUT(2);
-  TVectorD wscatAir(2);
-
-  for (int ipl = 0; ipl < _nTelPlanes; ipl++)
-  {
-    //_X0_Si_frac = _planeThickness[ipl] / _X0_Si + 50.e-3 / _X0_Kapton; // Si + Kapton per plane
-
-    tetSi  = 0.0136 * sqrt(_X0_Si_frac) / _eBeam * ( 1 + 0.038*log(_X0_Si_frac) );
-    //tetDUT = 0.0136 * sqrt(_X0_DUT_frac) / _eBeam * ( 1 + 0.038*log(_X0_DUT_frac) ); // FIXME for now w/o DUT
-
-    wscatSi[0] = 1.0 / ( tetSi * tetSi ); // weight
-    wscatSi[1] = 1.0 / ( tetSi * tetSi );
-
-    //wscatDUT[0] = 1.0 / ( tetDUT * tetDUT ); // weight // FIXME for now w/o DUT
-    //wscatDUT[1] = 1.0 / ( tetDUT * tetDUT );
-
-
-    // Add scatterer:
-    TVectorD scat(2);
-    scat.Zero(); // mean is zero
-    _listOfPoints[_ID[ipl]].addScatterer(scat, wscatSi);
-
-
-    if(ipl > 0)
-    {
-      _dz = _planePosition[ipl] - _planePosition[ipl-1];
-      _X0_Air_frac =   0.5*_dz  / _X0_Air; // seee constructor 
-      tetAir = 0.0136 * sqrt(_X0_Air_frac) / _eBeam * ( 1 + 0.038*log(_X0_Air_frac) );
-
-      wscatAir[0] = 1.0 / ( tetAir * tetAir ); // weight
-      wscatAir[1] = 1.0 / ( tetAir * tetAir );
-
-      if(ipl != _nTelPlanes -1){ // do not addScatterer after last plane
-	_listOfPoints[_ID[ipl]+1].addScatterer(scat, wscatAir);
-	_listOfPoints[_ID[ipl]+2].addScatterer(scat, wscatAir);
-      }
-    }
-
-  }
-}
-
 void AnaTel::SetResolution(Int_t Ipl, Double_t res)
 {
   _planeResolution[Ipl] = res;
 }
 
-void AnaTel::SetResolutionGBL(Int_t Ipl, Double_t res)
-{
-  _planeResolution[Ipl] = res;
-
-  // measurement = residual
-  TVectorD meas(2);
-  meas.Zero(); // ideal
-
-  // Precision = 1/resolution^2
-  TVectorD measPrec(2);
-  measPrec[0] = 1.0 / res / res;
-  measPrec[1] = 1.0 / res / res;
-
-  TMatrixD proL2m(2,2);
-  proL2m.UnitMatrix();
-
-  (_listOfPoints.at(_ID[Ipl])).addMeasurement(proL2m, meas, measPrec);
-}
 
 void AnaTel::SetResolution(Double_t Resolution)
 {
   for(int ipl=0;ipl<_nTelPlanes;ipl++)
     _planeResolution[ipl]= Resolution;
-}
-
-void AnaTel::SetResolutionGBL(Double_t res)
-{
-  for(int ipl = 0; ipl < _nTelPlanes; ipl++)
-    SetResolutionGBL(ipl, res);
 }
 
 void AnaTel::SetResolution(Double_t * Resolution)
@@ -481,48 +343,10 @@ void AnaTel::SetResolution(Double_t * Resolution)
     _planeResolution[ipl]= Resolution[ipl];
 }
 
-void AnaTel::SetResolutionGBL(Double_t * Resolution)
-{
-  for(int ipl=0; ipl<_nTelPlanes; ipl++)
-    SetResolutionGBL(ipl, Resolution[ipl]);
-}
-
 void AnaTel::SetThickness(Double_t thickness)
 {
   for(int ipl=0;ipl<_nTelPlanes;ipl++)
     _planeThickness[ipl]= thickness;
-}
-
-void AnaTel::SetThicknessGBL(Double_t thickness)
-{
-  for(int ipl=0;ipl<_nTelPlanes;ipl++)
-    _planeThickness[ipl]= thickness;
-
-  double tetSi;
-
-  TVectorD wscatSi(2); // FIXME can these be in the header ?
-  //TVectorD wscatDUT(2);
-  TVectorD wscatAir(2);
-
-  for (int ipl = 0; ipl < _nTelPlanes; ipl++)
-  {
-    _X0_Si_frac = _planeThickness[ipl] / _X0_Si + 50.e-3 / _X0_Kapton; // Si + Kapton per plane
-
-    tetSi  = 0.0136 * sqrt(_X0_Si_frac) / _eBeam * ( 1 + 0.038*log(_X0_Si_frac) );
-    //tetDUT = 0.0136 * sqrt(_X0_DUT_frac) / _eBeam * ( 1 + 0.038*log(_X0_DUT_frac) ); // FIXME for now w/o DUT
-
-    wscatSi[0] = 1.0 / ( tetSi * tetSi ); // weight
-    wscatSi[1] = 1.0 / ( tetSi * tetSi );
-
-    //wscatDUT[0] = 1.0 / ( tetDUT * tetDUT ); // weight // FIXME for now w/o DUT
-    //wscatDUT[1] = 1.0 / ( tetDUT * tetDUT );
-
-    // Add scatterer:
-    TVectorD scat(2);
-    scat.Zero(); // mean is zero
-    _listOfPoints[_ID[ipl]].addScatterer(scat, wscatSi);
-
-  }
 }
 
 Int_t AnaTel::GetNplanes()
@@ -607,35 +431,67 @@ Double_t AnaTel::GetPointingRes(Int_t Ipl, Bool_t UseInFit)
 
 Double_t AnaTel::GetPointingResGBL(Int_t Ipl, Bool_t UseInFit)
 {
-  // turn Ipl plane off, it is reset by calling SetResolutionGBL(double res)
-  // FIXME better just build t'scope here!
 
-  double temp_res = _planeResolution[Ipl];
+  std::vector<double> _pointingResolutionLoc;
+  _s = 0;
+  _sPoint.clear();
+  _listOfPoints.clear();
 
-  if(!UseInFit){
-    // measurement = residual
-    TVectorD meas(2);
-    meas.Zero(); // ideal
+  std::cout << "Building the GBL t'scope " << std::endl;
+  _listOfPoints.reserve(3*6);
 
-    // Precision = 1/resolution^2
-    TVectorD measPrec(2);
-    measPrec[0] = 0.0;
-    measPrec[1] = 0.0;
+  unsigned int ipl = 0;
+  double step = 0;
+  _s = 0;
+  double tetSi, tetDUT, tetAir;
 
-    TMatrixD proL2m(2,2);
-    proL2m.UnitMatrix();
+  TVectorD wscatSi(2); // FIXME can these be in the header ?
+  TVectorD wscatDUT(2);
+  TVectorD wscatAir(2);
 
-    //std::cout << " Disabling plane " << Ipl << " at point " << _ID[Ipl] << std::endl;
+  std::cout << "E = " << _eBeam << std::endl;
+  while(1)
+  {
+    _X0_Si_frac = _planeThickness[ipl] / _X0_Si + 50.e-3 / _X0_Kapton; // Si + Kapton per plane
+    //if(ipl == 0) std::cout << "X0 fraction of sensors = " << _X0_Si_frac << std::endl; // FIXME add verbose level
 
-    _listOfPoints[_ID[Ipl]].addMeasurement(proL2m, meas, measPrec);
+    tetSi  = 0.0136 * sqrt(_X0_Si_frac) / _eBeam * ( 1 + 0.038*log(_X0_Si_frac) );
+    //tetDUT = 0.0136 * sqrt(_X0_DUT_frac) / _eBeam * ( 1 + 0.038*log(_X0_DUT_frac) ); // FIXME for now w/o DUT
+
+    wscatSi[0] = 1.0 / ( tetSi * tetSi ); // weight
+    wscatSi[1] = 1.0 / ( tetSi * tetSi );
+
+    //wscatDUT[0] = 1.0 / ( tetDUT * tetDUT ); // weight // FIXME for now w/o DUT
+    //wscatDUT[1] = 1.0 / ( tetDUT * tetDUT );
+
+
+
+    if(UseInFit || ipl != Ipl) {
+      _listOfPoints.push_back(AnaTel::getPoint(step, _planeResolution[ipl], wscatSi, true)); // add plane
+    }
+    else  _listOfPoints.push_back(AnaTel::getPoint(step, wscatSi, true)); // add plane w/o meas
+
+
+    if((ipl+1) == _nTelPlanes) break;
+    _dz = _planePosition[ipl+1] - _planePosition[ipl];
+    // Air between planes; Factor 0.5 as the air is devided into two scatterers
+    _X0_Air_frac =   0.5*_dz  / _X0_Air; 
+    tetAir = 0.0136 * sqrt(_X0_Air_frac) / _eBeam * ( 1 + 0.038*log(_X0_Air_frac) );
+
+    wscatAir[0] = 1.0 / ( tetAir * tetAir ); // weight
+    wscatAir[1] = 1.0 / ( tetAir * tetAir );
+
+
+    step = 0.21*_dz;
+    _listOfPoints.push_back(AnaTel::getPoint(step, wscatAir, false)); // add air, not added after last plane
+    step = 0.58*_dz;
+    _listOfPoints.push_back(AnaTel::getPoint(step, wscatAir, false)); // add air, not added after last plane
+    // Set step for distance to next plane
+    step = 0.21*_dz; 
+
+    ipl++;
+
   }
-
-  // Print some data
-  /*for(int i = 0; i < _listOfPoints.size(); i++)
-    {
-    std::cout << "point " << i << " at " << _sPoint[i] << " has scatterer " << _listOfPoints[i].hasScatterer() << ", has measurement " << _listOfPoints[i].hasMeasurement() << std::endl;
-
-    }*/
 
   // fit trajectory:
 
@@ -654,30 +510,14 @@ Double_t AnaTel::GetPointingResGBL(Int_t Ipl, Bool_t UseInFit)
   TVectorD aCorrection(5);
   TMatrixDSym aCovariance(5);
 
-  for(int ipl = 0; ipl < _nTelPlanes; ipl++){
-    traj.getResults( _ID[ipl], aCorrection, aCovariance );
-    _pointingResolution[ipl] =  sqrt(aCovariance(3,3));
+  for(int iipl = 0; iipl < _nTelPlanes; iipl++){
+    traj.getResults( _ID[iipl], aCorrection, aCovariance );
+    _pointingResolutionLoc.push_back(sqrt(aCovariance(3,3)));
+    //std::cout << iipl << "  " << _ID[iipl] <<" pointingRes = " << _pointingResolutionLoc.back() << ",  ";
   }
+  std::cout << std::endl;
 
-  if(!UseInFit){
-    // measurement = residual
-    TVectorD meas(2);
-    meas.Zero(); // ideal
-
-    // Precision = 1/resolution^2
-    TVectorD measPrec(2);
-    measPrec[0] = 1./temp_res/temp_res;
-    measPrec[1] = 1./temp_res/temp_res;
-
-    TMatrixD proL2m(2,2);
-    proL2m.UnitMatrix();
-
-    //std::cout << " Enabling plane " << Ipl << " at point " << _ID[Ipl] << std::endl;
-
-    _listOfPoints[_ID[Ipl]].addMeasurement(proL2m, meas, measPrec);
-  }
-
-  return _pointingResolution[Ipl];
+  return _pointingResolutionLoc.at(Ipl);
 }
 
 Double_t AnaTel::GetWidth(Int_t Ipl, Bool_t UseInFit)
@@ -716,6 +556,9 @@ Double_t AnaTel::GetWidthGBL(Int_t Ipl, Bool_t UseInFit)
 
   Double_t Width;
 
+  //std::cout << " Current intrinsic resolution used in GetWidthGBL(): " << _planeResolution[Ipl] << std::endl;
+
+
   if(UseInFit)
     Width=sqrt(_planeResolution[Ipl]*_planeResolution[Ipl]-PointingRes*PointingRes);
   else
@@ -743,6 +586,25 @@ Double_t AnaTel::GetDUTWidth()
   return width;
 }
 
+void AnaTel::PrintPlanes()
+{
+  std::cout << "ntelPlanes = " << _nTelPlanes << std::endl;
+  std::cout << "E = " << _eBeam << std::endl;
+  std::cout << "s = " << _s << std::endl;
+  std::cout << "dz = " << _dz << std::endl;
+  std::cout << " size _sPoint = " << _sPoint.size() << std::endl;
+  std::cout << " size _LoP = " << _listOfPoints.size() << std::endl;
+
+  for(unsigned int ipl = 0; ipl < _nTelPlanes; ipl++)
+  {
+    std::cout << ipl << " thickness = " << _planeThickness[ipl] 
+                   << " position  = " << _planePosition[ipl]
+		   << " planeX0   = " << _planeX0[ipl]
+		   << " planeReso = " << _planeResolution[ipl] 
+		   << std::endl;
+  }
+  
+}
 
 // ==============================================================
 //

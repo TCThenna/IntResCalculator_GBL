@@ -65,17 +65,12 @@ class AnaTel {
 	Double_t X0, Double_t Resolution); 
 
     void  SetResolution(Int_t Ipl, Double_t Resolution);
-    void  SetResolutionGBL(Int_t Ipl, Double_t Resolution);
     void  SetResolution(Double_t Resolution);
-    void  SetResolutionGBL(Double_t Resolution);
     void  SetResolution(Double_t * ResArray);
-    void  SetResolutionGBL(Double_t * ResArray);
 
     void  SetThickness(Double_t Thickness);
-    void  SetThicknessGBL(Double_t Thickness);
 
     void SetBeam(Double_t Energy, Double_t Spread=0.);
-    void SetBeamGBL(Double_t Energy, Double_t Spread=0.);
 
     void SetDUT(Int_t idut, Bool_t UseInFit);
 
@@ -100,8 +95,8 @@ class AnaTel {
 
     Double_t GetDUTWidth();
 
-    gbl::GblPoint getPoint(double step, double res, TVectorD wscat, bool has_meas = true);
-    gbl::GblPoint getPoint(double step, TVectorD wscat);
+    gbl::GblPoint getPoint(double step, double res, TVectorD wscat, bool IsPlane, bool has_meas = true);
+    gbl::GblPoint getPoint(double step, TVectorD wscat, bool IsPlane);
 
     void PrintID()
     {
@@ -109,6 +104,8 @@ class AnaTel {
         std::cout << _ID[i] << " ";
       std::cout << std::endl;
     }
+
+    void PrintPlanes();
 
   private:
 
